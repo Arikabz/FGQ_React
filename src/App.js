@@ -1,22 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch} from 'react-router-dom'
-import Hero from './components/Hero'
+import {Route, Routes} from 'react-router-dom'
+import NavbarSidebar from './components/NavbarSidebar'
 import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import Card from './components/Card'
+import FooterSlim from './components/FooterSlim'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import Dashboard from './pages/Dashboard'
 
 function App() {
     return (
-        <Router>
-            <div className="App">
-                <Navbar/>
-                <div className='container mx-auto'>
-                    <Hero/>
-                </div>
-                <Footer/>
-            </div>
-        </Router>
+        <div className="App">
+            <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/login' element={<Login />} />
+                <Route path='/signup' element={<Signup />} />
+                <Route path='/dashboard' element={<Dashboard />} />
+            </Routes>
+        </div>
     );
 }
 
