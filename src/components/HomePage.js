@@ -10,7 +10,7 @@ const HomePage = () => {
                     <h1 className="mb-5 text-5xl font-bold">&iexcl;Entra ya!</h1>
                     <p className="mb-5">&iexcl;Comienza a ver las predicciones!</p>
                     <Link to='/signup' className='btn btn-primary mx-2'>Registrarse</Link>
-                    <Link to='/login' className='btn btn-primary mx-2'>Entrar</Link>
+                    <Link to='/login' className='btn btn-primary mx-2'>Ingresar</Link>
                 </div>
             </div>
         </div>

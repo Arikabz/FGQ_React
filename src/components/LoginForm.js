@@ -5,10 +5,12 @@ const LoginForm = (props) => {
     const text={
         h1Text: 'Entra ya!',
         pText: 'Comienza a ver las predicciones!',
+        forget: `Olvidaste tu contrase${String.fromCharCode(241)}a?`,
     }
     if(props.kind==='signup'){
         text.h1Text = `Reg${String.fromCharCode(237)}strate!`
         text.pText= 'Comienza a ver las predicciones!'
+        text.forget= `Ya tienes cuenta? Ingresar`
     }
     return (
         <div className="hero min-h-screen bg-base-200">
@@ -38,14 +40,12 @@ const LoginForm = (props) => {
                                 <span className="label-text">Contrase&ntilde;a</span>
                             </label>
                             <input type="text" placeholder="Contrase&ntilde;a" className="input input-bordered" />
-                            {kind==='login' &&
                                 <label className="label">
-                                    <Link to='/forgotPassword' className='label-text-alt link link-hover'>&iquest;Olvidaste tu contrase&ntilde;a?</Link>
+                                    <Link to='/forgotPassword' className='label-text-alt link link-hover'>&iquest;{text.forget}</Link>
                                 </label>
-                        }
                         </div>
                         <div className="form-control mt-6">
-                            <button className="btn btn-primary">{kind==='login' ? 'Entrar' : 'Registrarse' }</button>
+                            <button className="btn btn-primary">{kind==='login' ? 'Ingresar' : 'Registrarse' }</button>
                         </div>
                             {kind==='login' &&
                         <label className="label">
