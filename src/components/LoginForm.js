@@ -41,7 +41,7 @@ const LoginForm = (props) => {
                             </label>
                             <input type="text" placeholder="Contrase&ntilde;a" className="input input-bordered" />
                                 <label className="label">
-                                    <Link to='/forgotPassword' className='label-text-alt link link-hover'>&iquest;{text.forget}</Link>
+                                    <Link to={kind==='login'? '/forgotPassword' : '/login'} className='label-text-alt link link-hover'>&iquest;{text.forget}</Link>
                                 </label>
                         </div>
                         <div className="form-control mt-6">
