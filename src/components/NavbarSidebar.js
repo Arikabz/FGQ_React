@@ -17,8 +17,8 @@ const NavbarSidebar = (props) => {
                     </div>
                     <div className="flex-none hidden lg:block">
                         <ul className="menu menu-horizontal">
-                            <li><Link to='/login'>Ingresar</Link></li>
-                            <li><Link to='/signup'>Registrarse</Link></li>
+                            <li><Link to='/login' className=''>Ingresar</Link></li>
+                            <li><Link to='/signup' className=''>Registrarse</Link></li>
                         </ul>
                     </div>
                 </div>

@@ -2,8 +2,10 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 
 const HomePage = () => {
+    let heroImage='https://patch.com/img/cdn20/users/22920172/20190201/050114/styles/raw/public/processed_images/superbowl-getty-1549058474-9292.jpg'
+    heroImage = 'https://media.gq-magazine.co.uk/photos/5d13ad354113b55f8e46adb7/16:9/w_2560%2Cc_limit/New-England-Patriots-06-GQ-18Oct17_getty_b.jpg'
     return (
-        <div className="hero min-h-screen" style={{ backgroundImage: `url("https://media.gq-magazine.co.uk/photos/5d13ad354113b55f8e46adb7/16:9/w_2560%2Cc_limit/New-England-Patriots-06-GQ-18Oct17_getty_b.jpg")` }}>
+        <div className="hero min-h-screen" style={{ backgroundImage: `url(${heroImage})` }}>
             <div className="hero-overlay bg-opacity-60"></div>
             <div className="hero-content text-center text-neutral-content">
                 <div className="max-w-md">
