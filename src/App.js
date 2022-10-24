@@ -6,6 +6,8 @@ import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import ForgotPassword from './pages/ForgotPassword'
 
+const serverUrl = 'localhost:6970'
+
 function App() {
     return (
         <div className="App">
