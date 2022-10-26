@@ -1,30 +1,30 @@
-import React from 'react'
 import TableWithVisuals from '../components/TableWithVisuals'
 
-let url = 'http://localhost:6970'
+const url = 'http://localhost:6969';
 
-async function getWeek (w) {
+const sth = async (w) => {
     try {
         const currentWeek = await fetch(url+`/api/season/week/${w}`,
             {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin' : 'http://localhost:6970',
-
+                    'Access-Control-Allow-Origin' : '*',
                 },
             })
-        console.log(currentWeek)
-        return await currentWeek.json();
+        const response = await currentWeek.json();
+        return await response;
     } catch (error) {
         console.log(error)
     }
 }
 
+
+
 const Dashboard = () => {
     return (
         <div>
-            <TableWithVisuals props={getWeek(6)}/>
+            <TableWithVisuals />
         </div>
     )
 }

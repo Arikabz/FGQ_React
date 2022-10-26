@@ -6,9 +6,9 @@ import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import ForgotPassword from './pages/ForgotPassword'
 
-const serverUrl = 'localhost:6970'
 
 function App() {
+    //getWeek(6).then(x=>console.log(x.result[0].Games[1].Away))
     return (
         <div className="App">
             <Routes>
