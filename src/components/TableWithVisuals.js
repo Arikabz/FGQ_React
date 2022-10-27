@@ -1,11 +1,52 @@
 import React, {useEffect, useState} from 'react'
+import Select from '../components/Select'
 import { getWeek } from '../services/Services'
 
 const Entry = (props) => {
-    console.log('new Entry')
-    console.log(props.game.result)
-    let scores = props.game.result.split(' ').filter(x=> Number(x))
-    let homeScore = scores[1], awayScore = scores[0];
+    let homeScore, awayScore;
+    let happened = props.game.result || false
+    if(props.game.result){
+        let scores = props.game.result.split(' ')
+
+        const awayInitials = () => {
+            if(props.game.Away.includes(' ')){
+                let splitSpaces = props.game.Away.split(' ').map(x=> {
+                    if(!x.includes('.')){
+                        return x.charAt()
+                    }else {return x}
+                }).join('')
+                if(splitSpaces.includes('.')){
+                    return splitSpaces.split('').filter(x=> x!=='.').join('')
+                } else{
+                    return splitSpaces
+                }
+
+            } else{
+                return props.game.Away.toUpperCase().slice(0,3)
+            }
+        }
+        if(awayInitials()===scores[0]){
+            homeScore = scores[4]
+            awayScore = scores[1];
+        }
+        else {
+            homeScore = scores[1]
+            awayScore = scores[4];
+        }
+    } 
+    function getStadium () {
+        if(props.game.Buy_Tickets){
+            return props.game.Venue
+        } else{
+            return props.game.TV
+        }
+    }
+    function winLose (current,other){
+        let str = 'basis-1/3'
+        return current<other ? str + ' text-red-600' : str + ' text-green-600'
+    }
+
+
     return (
         <tr>
             <th>
@@ -26,6 +67,28 @@ const Entry = (props) => {
                     </div>
                 </div>
             </td>
+            {!happened &&
+                <td>
+                    <div className="font-bold">{props.game.Time}</div>
+                    <div className="text-sm opacity-50">{props.game.TV.length>4 ? 'CBS' : props.game.TV}</div>
+                </td>
+        }
+            {happened &&
+                <td>
+                    <div className=''>
+                        <div className="font-bold flex flex-row">
+                            <div className={winLose(awayScore,homeScore)}>
+                                {awayScore} 
+                            </div>
+                            <div className='basis-1/3'>
+                            </div>
+                            <div className={winLose(homeScore,awayScore)}>
+                                {homeScore} 
+                            </div>
+                        </div>
+                    </div>
+                </td>
+        }
             <td>
                 <div className="flex items-center space-x-3">
                     <div className="avatar">
@@ -40,7 +103,12 @@ const Entry = (props) => {
                 </div>
             </td>
             <td>
-                <a href={props.game.gameInfo}>Game Info</a>
+                {!happened && 
+                    <div>{getStadium()}</div>
+            }
+                {happened && 
+                    <a className='btn btn-ghost btn-xs' href={props.game.gameInfo} target='_blank' rel='noreferrer'>Game Info</a>
+            }
             </td>
             <th>
                 <button className="btn btn-ghost btn-xs">details</button>
@@ -53,13 +121,17 @@ const TableWithVisuals = (props) => {
     const [stuff, setStuff] = useState({lmao:'yes'});
     useEffect(()=>{
         console.log('componentDidMount lifecycle')
-        getWeek(2).then(x=> setStuff(x))
+        getWeek(3).then(x=> setStuff(x))
     },[])
+    const changeWeek = (num) => {
+        console.log('change week to:')
+        console.log(num)
+        getWeek(num).then(x=> setStuff(x))
+    }
     let games = []
     if(stuff.result){
 
         games = stuff.result[0].Games || []
-        console.log('games set')
         //console.log(stuff.result[0].Games[1].Home)
     }
     return (
@@ -73,23 +145,27 @@ const TableWithVisuals = (props) => {
                             </label>
                         </th>
                         <th>Away</th>
-                        <th>Home</th>
-                        <th>Something</th>
                         <th></th>
+                        <th>Home</th>
+                        <th>More</th>
+                        <th>
+                            <Select thisWeek={props.thisWeek} onChange={changeWeek} num={16}/>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
 
-                    {games.map(g => {
-                        return <Entry game={g}/>
+                    {games.map((g,i) => {
+                        return <Entry key={i+1} game={g}/>
                     })}
                 </tbody>
                 <tfoot>
                     <tr>
                         <th></th>
                         <th>Away</th>
+                        <th></th>
                         <th>Home</th>
-                        <th>Something</th>
+                        <th>More</th>
                         <th></th>
                     </tr>
                 </tfoot>

@@ -13,12 +13,12 @@ const NavbarSidebar = (props) => {
                         </label>
                     </div> 
                     <div className="flex-1 px-2 mx-2">
-                        <Link to='/' className='btn btn-ghost normal-case text-xl'>FGQ</Link>
+                        <Link to='/dashboard' className='btn btn-ghost normal-case text-xl'>FGQ</Link>
                     </div>
                     <div className="flex-none hidden lg:block">
                         <ul className="menu menu-horizontal">
-                            <li><Link to='/login' className=''>Ingresar</Link></li>
-                            <li><Link to='/signup' className=''>Registrarse</Link></li>
+                            <li><Link to='/dashboard' className=''>Dashboard</Link></li>
+                            <li><Link to='/logout' className=''>Log Out</Link></li>
                         </ul>
                     </div>
                 </div>
@@ -28,8 +28,10 @@ const NavbarSidebar = (props) => {
             <div className="drawer-side">
                 <label htmlFor="my-drawer-3" className="drawer-overlay"></label> 
                 <ul className="menu p-4 overflow-y-auto w-80 bg-base-100">
-                    <li><Link to='/login'>Ingresar</Link></li>
-                    <li><Link to='/signup'>Registrarse</Link></li>
+                            <li><Link to='/dashboard' className=''>Dashboard</Link></li>
+                            <li><Link to='/leaderboard' className=''>Leaderboard</Link></li>
+                            <li><Link to='/profile' className=''>Perfil</Link></li>
+                            <li><Link to='/logout' className=''>Log Out</Link></li>
                 </ul>
             </div>
         </div>

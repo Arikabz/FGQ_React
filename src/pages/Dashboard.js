@@ -1,30 +1,21 @@
 import TableWithVisuals from '../components/TableWithVisuals'
-
-const url = 'http://localhost:6969';
-
-const sth = async (w) => {
-    try {
-        const currentWeek = await fetch(url+`/api/season/week/${w}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin' : '*',
-                },
-            })
-        const response = await currentWeek.json();
-        return await response;
-    } catch (error) {
-        console.log(error)
-    }
-}
-
+import NavbarLoggedIn from '../components/NavbarLoggedIn'
+import Footer from '../components/FooterSlim'
+import {getCurrentWeek} from '../services/Services'
+import { useEffect, useState } from 'react'
 
 
 const Dashboard = () => {
+    const [week, setWeek] = useState('')
+    useEffect(()=>{
+        console.log('getting week...')
+        getCurrentWeek().then(x=> setWeek(x.result[0]))
+
+    },[])
+    console.log(week)
     return (
         <div>
-            <TableWithVisuals />
+            <NavbarLoggedIn content={<TableWithVisuals thisWeek={week}/>} footer={<Footer/>}/>
         </div>
     )
 }
