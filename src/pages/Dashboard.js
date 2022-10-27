@@ -12,10 +12,9 @@ const Dashboard = () => {
         getCurrentWeek().then(x=> setWeek(x.result[0]))
 
     },[])
-    console.log(week)
     return (
         <div>
-            <NavbarLoggedIn content={<TableWithVisuals thisWeek={week}/>} footer={<Footer/>}/>
+            <NavbarLoggedIn content={<TableWithVisuals weekNum={week.split(' ')[1]} thisWeek={week}/>} footer={<Footer/>}/>
         </div>
     )
 }

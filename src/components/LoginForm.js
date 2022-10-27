@@ -1,7 +1,22 @@
 import {Link} from 'react-router-dom'
+import {useState} from 'react'
 
 const LoginForm = (props) => {
     const kind = props.kind;
+    const [formData, setFormData] = useState({
+        email: '',
+        email2:'',
+        password:'',
+    })
+    const {email,email2,password} = formData;
+
+    const onChange = (e) => {
+        setFormData((prevState)=>({
+            ...prevState,
+            [e.target.name]: e.target.value,
+        }))
+    }
+    const onSubmit = () => {}
     const text={
         h1Text: 'Entra ya!',
         pText: 'Comienza a ver las predicciones!',
@@ -38,14 +53,14 @@ const LoginForm = (props) => {
                             <label className="label">
                                 <span className="label-text">Email</span>
                             </label>
-                            <input type="text" placeholder="Email" className="input input-bordered" />
+                            <input type="text" value={email} placeholder="Email" name='email' className="input input-bordered" onChange={onChange} />
                         </div>
                         { kind ==='signup' &&
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text">Confirm Email</span>
+                                    <span className="label-text">Confirmar Email</span>
                                 </label>
-                                <input type="text" placeholder="Confirm Email" className="input input-bordered" />
+                                <input type="text" value={email2} name='email2' placeholder="Confirmar Email" className="input input-bordered" onChange={onChange} />
                             </div>
                     }
                         <div className="form-control">
@@ -55,7 +70,7 @@ const LoginForm = (props) => {
                                 </label>
                         }
                             {kind!=='forgot' &&
-                                <input type="text" placeholder="Contrase&ntilde;a" className="input input-bordered" />
+                                <input type="password" name='password' value={password} placeholder="Contrase&ntilde;a" className="input input-bordered" onChange={onChange}/>
                         }
                             <label className="label">
                                 {kind!=='forgot' &&
@@ -64,7 +79,7 @@ const LoginForm = (props) => {
                             </label>
                         </div>
                         <div className="form-control mt-6">
-                            <button className="btn btn-primary">{text.btnText}</button>
+                            <button className="btn btn-primary" onClick={onSubmit}>{text.btnText}</button>
                         </div>
                         {kind==='login' &&
                             <label className="label">

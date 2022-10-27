@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import Select from '../components/Select'
-import { getWeek } from '../services/Services'
+import RadialProgress from '../components/RadialProgress'
+import { getWeek, getCurrentWeek } from '../services/Services'
 
 const Entry = (props) => {
     let homeScore, awayScore;
@@ -117,11 +118,12 @@ const Entry = (props) => {
     )
 }
 
-const TableWithVisuals = (props) => {
+const TableWithVisuals = ({weekNum, thisWeek}) => {
     const [stuff, setStuff] = useState({lmao:'yes'});
     useEffect(()=>{
-        console.log('componentDidMount lifecycle')
-        getWeek(3).then(x=> setStuff(x))
+        console.log('useEffect')
+        getCurrentWeek().then(x=> getWeek(x.result[0].split(' ')[1]).then(y=>setStuff(y)))
+        //getWeek().then(x=> setStuff(x))
     },[])
     const changeWeek = (num) => {
         console.log('change week to:')
@@ -136,6 +138,7 @@ const TableWithVisuals = (props) => {
     }
     return (
         <div className="overflow-x-auto w-full">
+                {stuff.result &&
             <table className="table w-full">
                 <thead>
                     <tr>
@@ -149,7 +152,7 @@ const TableWithVisuals = (props) => {
                         <th>Home</th>
                         <th>More</th>
                         <th>
-                            <Select thisWeek={props.thisWeek} onChange={changeWeek} num={16}/>
+                            <Select thisWeek={thisWeek} onChange={changeWeek} num={16}/>
                         </th>
                     </tr>
                 </thead>
@@ -171,6 +174,11 @@ const TableWithVisuals = (props) => {
                 </tfoot>
 
             </table>
+                }
+            {!stuff.result &&
+
+                <RadialProgress />
+            }
         </div>
     )
 }
