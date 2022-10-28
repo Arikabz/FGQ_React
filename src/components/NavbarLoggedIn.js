@@ -1,7 +1,9 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import { useAuth0 } from '@auth0/auth0-react';
 
 const NavbarSidebar = (props) => {
+    const { logout } = useAuth0();
     return (
         <div className="drawer">
             <input id="my-drawer-3" type="checkbox" className="drawer-toggle" /> 
@@ -18,7 +20,7 @@ const NavbarSidebar = (props) => {
                     <div className="flex-none hidden lg:block">
                         <ul className="menu menu-horizontal">
                             <li><Link to='/dashboard' className=''>Dashboard</Link></li>
-                            <li><Link to='/logout' className=''>Log Out</Link></li>
+                            <li><button onClick={()=>logout({ returnTo: window.location.origin})} className=''>Log Out</button></li>
                         </ul>
                     </div>
                 </div>
@@ -28,10 +30,10 @@ const NavbarSidebar = (props) => {
             <div className="drawer-side">
                 <label htmlFor="my-drawer-3" className="drawer-overlay"></label> 
                 <ul className="menu p-4 overflow-y-auto w-80 bg-base-100">
-                            <li><Link to='/dashboard' className=''>Dashboard</Link></li>
-                            <li><Link to='/leaderboard' className=''>Leaderboard</Link></li>
-                            <li><Link to='/profile' className=''>Perfil</Link></li>
-                            <li><Link to='/logout' className=''>Log Out</Link></li>
+                    <li><Link to='/dashboard' className=''>Dashboard</Link></li>
+                    <li><Link to='/leaderboard' className=''>Leaderboard</Link></li>
+                    <li><Link to='/profile' className=''>Perfil</Link></li>
+                    <li><button onClick={()=>logout({ returnTo: window.location.origin})} className=''>Log Out</button></li>
                 </ul>
             </div>
         </div>
