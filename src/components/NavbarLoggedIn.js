@@ -3,7 +3,8 @@ import {Link} from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react';
 
 const NavbarSidebar = (props) => {
-    const { logout } = useAuth0();
+    const { user, logout } = useAuth0();
+    const { name, picture, email} = user;
     return (
         <div className="drawer">
             <input id="my-drawer-3" type="checkbox" className="drawer-toggle" /> 
@@ -16,6 +17,11 @@ const NavbarSidebar = (props) => {
                     </div> 
                     <div className="flex-1 px-2 mx-2">
                         <Link to='/dashboard' className='btn btn-ghost normal-case text-xl'>FGQ</Link>
+                    </div>
+                    <div className="avatar">
+                        <div className="w-10 rounded-full">
+                            <img src={picture} alt='img' />
+                        </div>
                     </div>
                     <div className="flex-none hidden lg:block">
                         <ul className="menu menu-horizontal">

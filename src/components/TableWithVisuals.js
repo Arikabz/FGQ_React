@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import Select from '../components/Select'
 import RadialProgress from '../components/RadialProgress'
-import { getWeek, getCurrentWeek } from '../services/Services'
+import { getWeek, getCurrentWeek, updateSeason} from '../services/Services'
+import { useAuth0, withAuthenticationRequired} from '@auth0/auth0-react'
+
 
 const Entry = (props) => {
     let homeScore, awayScore;
@@ -118,17 +120,43 @@ const Entry = (props) => {
     )
 }
 
-const TableWithVisuals = ({weekNum, thisWeek}) => {
+const TableWithVisuals = ({ weekNum, thisWeek}) => {
+    const [token, setToken] = useState('');
     const [stuff, setStuff] = useState({lmao:'yes'});
+    const [currentWeek, setCurrentWeek] = useState('')
+    const [weeks, setWeeks] = useState('');
+    const {getAccessTokenSilently} = useAuth0();
+
+    const getToken = async() => {
+        try {
+            const token = await getAccessTokenSilently();
+            console.log('token got: ' + token)
+            setToken(token);
+            return token 
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(()=>{
-        console.log('useEffect')
-        getCurrentWeek().then(x=> getWeek(x.result[0].split(' ')[1]).then(y=>setStuff(y)))
-        //getWeek().then(x=> setStuff(x))
+        console.log('Table Component useEffect')
+        getToken().then(t =>
+        {
+                updateSeason(t)
+                getCurrentWeek(t).then(x=> {
+                    setCurrentWeek(x)
+                    getWeek(x.result[0].split(' ')[1], t)
+                        .then(y=>setStuff(y))
+                })
+            }
+        )
+        //getWeek(currentWeek, token).then(y=>setStuff(y))
+        //getWeek(token).then(x=> setStuff(x))
     },[])
     const changeWeek = (num) => {
         console.log('change week to:')
         console.log(num)
-        getWeek(num).then(x=> setStuff(x))
+        getWeek(num, token).then(x=> setStuff(x))
     }
     let games = []
     if(stuff.result){
@@ -138,47 +166,47 @@ const TableWithVisuals = ({weekNum, thisWeek}) => {
     }
     return (
         <div className="overflow-x-auto w-full">
-                {stuff.result &&
-            <table className="table w-full">
-                <thead>
-                    <tr>
-                        <th>
-                            <label>
-                                <input type="checkbox" className="checkbox" />
-                            </label>
-                        </th>
-                        <th>Away</th>
-                        <th></th>
-                        <th>Home</th>
-                        <th>More</th>
-                        <th>
-                            <Select thisWeek={thisWeek} onChange={changeWeek} num={16}/>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
+            {stuff.result &&
+                <table className="table w-full">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label>
+                                    <input type="checkbox" className="checkbox" />
+                                </label>
+                            </th>
+                            <th>Away</th>
+                            <th></th>
+                            <th>Home</th>
+                            <th>More</th>
+                            <th>
+                                <Select thisWeek={currentWeek.result[0]} onChange={changeWeek} num={18}/>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    {games.map((g,i) => {
-                        return <Entry key={i+1} game={g}/>
-                    })}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th>Away</th>
-                        <th></th>
-                        <th>Home</th>
-                        <th>More</th>
-                        <th></th>
-                    </tr>
-                </tfoot>
+                        {games.map((g,i) => {
+                            return <Entry key={i+1} game={g}/>
+                        })}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th>Away</th>
+                            <th></th>
+                            <th>Home</th>
+                            <th>More</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
 
-            </table>
-                }
+                </table>
+        }
             {!stuff.result &&
 
                 <RadialProgress />
-            }
+        }
         </div>
     )
 }

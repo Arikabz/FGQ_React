@@ -1,5 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import LoginButton from './login-button'
+import SignupButton from './signup-button'
 
 const NavbarSidebar = (props) => {
     return (
@@ -17,8 +19,8 @@ const NavbarSidebar = (props) => {
                     </div>
                     <div className="flex-none hidden lg:block">
                         <ul className="menu menu-horizontal">
-                            <li><Link to='/login' className=''>Ingresar</Link></li>
-                            <li><Link to='/signup' className=''>Registrarse</Link></li>
+                            <LoginButton looks={'btn btn-ghost mx-2'} />
+                            <SignupButton looks={'btn btn-ghost mx-2'} />
                         </ul>
                     </div>
                 </div>
