@@ -10,7 +10,6 @@ import RadialProgress from '../components/RadialProgress'
 
 const Dashboard = () => {
     const [token, setToken] = useState('');
-    const [week, setWeek] = useState('')
     const { user, getAccessTokenSilently} = useAuth0();
     const {email, name} = user;
 
@@ -36,11 +35,11 @@ const Dashboard = () => {
         //getCurrentWeek(token).then(x=> setWeek(x.result[0]))
         //updateSeason().then(res => console.log(res))
         //getCurrentWeek().then(x=> setWeek(x.result[0]))
-    },[])
+   })
     return (
         (
             <div>
-                <NavbarLoggedIn content={<TableWithVisuals token={token} weekNum={week.split(' ')[1]} />} footer={<Footer/>}/>
+                <NavbarLoggedIn content={<TableWithVisuals token={token}  />} footer={<Footer/>}/>
             </div>
         )
     )

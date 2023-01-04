@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 const NavbarSidebar = (props) => {
     const { user, logout } = useAuth0();
-    const { name, picture, email} = user;
+    const { picture } = user;
     return (
         <div className="drawer">
             <input id="my-drawer-3" type="checkbox" className="drawer-toggle" /> 

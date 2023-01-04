@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import Select from '../components/Select'
 import RadialProgress from '../components/RadialProgress'
 import { getWeek, getCurrentWeek, updateSeason} from '../services/Services'
-import { useAuth0, withAuthenticationRequired} from '@auth0/auth0-react'
+import { useAuth0} from '@auth0/auth0-react'
 
 
 const Entry = (props) => {
@@ -124,7 +124,6 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
     const [token, setToken] = useState('');
     const [stuff, setStuff] = useState({lmao:'yes'});
     const [currentWeek, setCurrentWeek] = useState('')
-    const [weeks, setWeeks] = useState('');
     const {getAccessTokenSilently} = useAuth0();
 
     const getToken = async() => {
@@ -152,6 +151,7 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
         )
         //getWeek(currentWeek, token).then(y=>setStuff(y))
         //getWeek(token).then(x=> setStuff(x))
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
     const changeWeek = (num) => {
         console.log('change week to:')
