@@ -129,7 +129,6 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
     const getToken = async() => {
         try {
             const token = await getAccessTokenSilently();
-            console.log('token got: ' + token)
             setToken(token);
             return token 
         } catch (error) {
@@ -138,7 +137,6 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
     }
 
     useEffect(()=>{
-        console.log('Table Component useEffect')
         getToken().then(t =>
         {
                 updateSeason(t)

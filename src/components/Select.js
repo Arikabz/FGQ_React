@@ -12,7 +12,6 @@ const Select = ({thisWeek, onChange, num}) => {
         onChange(e.target.value)
         //changeweek(e.target.value)
     }
-        console.log(selectedWeek)
     return (
         <select className="select w-full max-w-xs" onChange={e=>handleChange(e)} >
             {opts.map(x=>{

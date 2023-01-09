@@ -2,6 +2,7 @@ import TableWithVisuals from '../components/TableWithVisuals'
 import NavbarLoggedIn from '../components/NavbarLoggedIn'
 import Footer from '../components/FooterSlim'
 import {checkUserAndRegister} from '../services/Services'
+import {redirect} from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import RadialProgress from '../components/RadialProgress'
@@ -17,7 +18,6 @@ const Dashboard = () => {
 
         try {
             const tokenGot = await getAccessTokenSilently();
-            console.log('token got: '+tokenGot)
             setToken(tokenGot);
             return tokenGot;
         } catch (error) {
@@ -27,9 +27,19 @@ const Dashboard = () => {
 
 
     useEffect(()=>{
-        console.log('Dashboard getting week...')
-        getToken().then(t=>
-        checkUserAndRegister(email, name, t)
+        getToken().then(t=>{
+        checkUserAndRegister(email, name, t).then(res=>{
+                if(res.firstTime===true){
+                    console.log('First')
+                    //alert('It is the first time!')
+                    return (redirect('/profile'))
+                }else{
+                    console.log('Not First')
+                    //alert('It is not the first time.')
+                    return
+                }
+            })
+        }
         )
         //getToken()
         //getCurrentWeek(token).then(x=> setWeek(x.result[0]))

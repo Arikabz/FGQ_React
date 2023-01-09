@@ -20,7 +20,9 @@ const NavbarSidebar = (props) => {
                     </div>
                     <div className="avatar">
                         <div className="w-10 rounded-full">
+                            <Link to='/profile'>
                             <img src={picture} alt='img' />
+                            </Link>
                         </div>
                     </div>
                     <div className="flex-none hidden lg:block">

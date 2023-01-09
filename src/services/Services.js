@@ -1,6 +1,5 @@
 export async function getWeek(w, token) {
     try{
-        console.log('getWeek SERVICE token: '+token)
         const res = await fetch('http://localhost:6969/api/season/week/'+w,
             {
                 headers: {
@@ -25,7 +24,6 @@ export async function getUserInfo(email) {
 
 export async function updateSeason(token) {
     try{
-        console.log('updateSeason SERVICE token: '+token)
         const res = await fetch('http://localhost:6969/api/season',
             {
                 headers: {
@@ -40,7 +38,6 @@ export async function updateSeason(token) {
 }
 export async function getCurrentWeek(token) {
     try{
-        console.log('getCurrentWeek SERVICE token: '+token)
         const res = await fetch('http://localhost:6969/api/currentWeek',
             {
                 headers: {
@@ -56,10 +53,10 @@ export async function getCurrentWeek(token) {
 
 export async function checkUserAndRegister (email, userName, token) {
     try{
-        console.log('checkUser SERVICE token: '+token)
-        const res = await fetch(`http://localhost:6969/user/checkAndRegister/${email}/${userName}`,
+        const res = await fetch(`http://localhost:6969/user/checkAndRegister`,
             {
                 headers: {
+                    'Content-Type': 'Application/Json',
                     Authorization: `Bearer ${token}`,
                 },
                 method: 'POST',
@@ -69,7 +66,7 @@ export async function checkUserAndRegister (email, userName, token) {
                 })
             },
         )
-        return await res.json();
+        return res.json();
     } catch (error){
         console.log(error)
     }
