@@ -137,13 +137,17 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
     }
 
     useEffect(()=>{
+        //const token = await getToken()
+
         getToken().then(t =>
         {
-                updateSeason(t)
+                updateSeason(t).then(z=>{
                 getCurrentWeek(t).then(x=> {
                     setCurrentWeek(x)
                     getWeek(x.result[0].split(' ')[1], t)
                         .then(y=>setStuff(y))
+                })
+
                 })
             }
         )
@@ -178,7 +182,7 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
                             <th>Home</th>
                             <th>More</th>
                             <th>
-                                <Select thisWeek={currentWeek.result[0]} onChange={changeWeek} num={18}/>
+                                <Select thisWeek={currentWeek.result[0]} onChange={changeWeek} num={18<Number(currentWeek.result[0].split(' ')[1]) ? Number(currentWeek.result[0].split(' ')[1]) : 18}/>
                             </th>
                         </tr>
                     </thead>
