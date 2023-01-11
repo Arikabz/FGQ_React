@@ -2,7 +2,7 @@ import TableWithVisuals from '../components/TableWithVisuals'
 import NavbarLoggedIn from '../components/NavbarLoggedIn'
 import Footer from '../components/FooterSlim'
 import {checkUserAndRegister} from '../services/Services'
-import {redirect} from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
 import RadialProgress from '../components/RadialProgress'
@@ -13,6 +13,7 @@ const Dashboard = () => {
     const [token, setToken] = useState('');
     const { user, getAccessTokenSilently} = useAuth0();
     const {email, name} = user;
+    const [firstTime, setFirstTime] = useState(false);
 
     const getToken = async() => {
 
@@ -29,10 +30,12 @@ const Dashboard = () => {
     useEffect(()=>{
         getToken().then(t=>{
         checkUserAndRegister(email, name, t).then(res=>{
-                if(res.firstTime===true){
+                setFirstTime(res.firstTime)
+                if(res.firstTime===false){
                     console.log('First')
+                    return
+                    //useNavigate('/profile')
                     //alert('It is the first time!')
-                    return (redirect('/profile'))
                 }else{
                     console.log('Not First')
                     //alert('It is not the first time.')
@@ -46,13 +49,20 @@ const Dashboard = () => {
         //updateSeason().then(res => console.log(res))
         //getCurrentWeek().then(x=> setWeek(x.result[0]))
    })
+    if(!firstTime)
+    {
+        return <Navigate to='/profile'/>
+
+    } else{
     return (
         (
             <div>
                 <NavbarLoggedIn content={<TableWithVisuals token={token}  />} footer={<Footer/>}/>
             </div>
-        )
+        )  
     )
+
+    }
 }
 
 export default withAuthenticationRequired(Dashboard, {
