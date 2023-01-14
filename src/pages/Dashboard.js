@@ -51,7 +51,7 @@ const Dashboard = () => {
    })
     if(!firstTime)
     {
-        return <Navigate to='/profile'/>
+        return <Navigate to='/league'/>
 
     } else{
     return (

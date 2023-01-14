@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Profile from './pages/Profile'
+import League from './pages/League'
 import Dashboard from './pages/Dashboard'
 import ForgotPassword from './pages/ForgotPassword'
 import { useAuth0 } from '@auth0/auth0-react';
@@ -27,6 +28,7 @@ function App() {
                 <Route path='/signup' element={<Signup />} />
                 <Route path='/profile' element={<Profile />} />
                 <Route path='/dashboard' element={<Dashboard/>}/>
+                <Route path='/league' element={<League />} />
                 <Route path='/forgotPassword' element={<ForgotPassword />} />
             </Routes>
         </div>
