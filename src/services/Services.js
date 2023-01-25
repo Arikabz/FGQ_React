@@ -13,6 +13,21 @@ export async function getWeek(w, token) {
     }
 }
 
+export async function checkUpdate(w, token) {
+    try{
+        const res = await fetch('http://localhost:6969/api/season/week/'+w,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+        )
+        return await res.json();
+    } catch (error){
+        console.log(error)
+    }
+}
+
 export async function getLeagueUsers(leagueID, token) {
     try{
         const res = await fetch(`http://localhost:6969/user/getLeagueUsers`,

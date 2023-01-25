@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import Select from '../components/Select'
 import RadialProgress from '../components/RadialProgress'
-import { getWeek, getCurrentWeek, updateSeason} from '../services/Services'
+import { getWeek, getCurrentWeek, updateSeason, checkUpdate} from '../services/Services'
 import { useAuth0} from '@auth0/auth0-react'
 
 
@@ -141,19 +141,38 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
 
         getToken().then(t =>
         {
-                updateSeason(t).then(z=>{
-                getCurrentWeek(t).then(x=> {
-                    setCurrentWeek(x)
-                    getWeek(x.result[0].split(' ')[1], t)
-                        .then(y=>setStuff(y))
-                })
+                checkUpdate(1,t).then(m=> {
+                    console.log(m.result[0].updatedAt)
+                    const lastUpdated = new Date(m.result[0].updatedAt) 
+                    const miliseconds = lastUpdated.getTime()
+                    const now = Date.now()
+                    console.log('now: '+ now)
+                    console.log('last: '+ miliseconds)
+                    if(miliseconds + 259300000 < now){
+                        console.log('season needs updating')
+                        updateSeason(t).then(z=>{
+                            getCurrentWeek(t).then(x=> {
+                                setCurrentWeek(x)
+                                getWeek(x.result[0].split(' ')[1], t)
+                                    .then(y=>setStuff(y))
+                            })
 
+                        })
+                    } else{
+                        console.log('no update')
+                        getCurrentWeek(t).then(x=> {
+                            setCurrentWeek(x)
+                            getWeek(x.result[0].split(' ')[1], t)
+                                .then(y=>setStuff(y))
+                        })
+
+                    }
                 })
             }
         )
         //getWeek(currentWeek, token).then(y=>setStuff(y))
         //getWeek(token).then(x=> setStuff(x))
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
     const changeWeek = (num) => {
         console.log('change week to:')
