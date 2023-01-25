@@ -7,7 +7,8 @@ import { useAuth0} from '@auth0/auth0-react'
 
 const Entry = (props) => {
     let homeScore, awayScore;
-    const [showInput, setShowInput] = useState(false)
+    const [showInput, setShowInput] = useState(props.showInput);
+    const [individualToggle, setIndividualToggle] = useState(false);
     let happened = props.game.result || false
     if(props.game.result){
         let scores = props.game.result.split(' ')
@@ -52,8 +53,14 @@ const Entry = (props) => {
 
     const showGuessInput = () => {
         setShowInput(!showInput)
+        setIndividualToggle(!individualToggle)
     }
 
+    useEffect(()=>{
+        if(!individualToggle){
+        setShowInput(props.showInput)
+        }
+    })
 
     return  (
         <tr>
@@ -142,6 +149,7 @@ const Entry = (props) => {
 
 const TableWithVisuals = ({ weekNum, thisWeek}) => {
     const [token, setToken] = useState('');
+    const [showInput, setShowInput] = useState(false);
     const [stuff, setStuff] = useState({lmao:'yes'});
     const [currentWeek, setCurrentWeek] = useState('')
     const {getAccessTokenSilently} = useAuth0();
@@ -198,6 +206,9 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
         console.log(num)
         getWeek(num, token).then(x=> setStuff(x))
     }
+    const toggleAllInputs = () => {
+        setShowInput(!showInput)
+    }
     let games = []
     if(stuff.result){
 
@@ -212,7 +223,7 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
                         <tr>
                             <th>
                                 <label>
-                                    <input type="checkbox" className="checkbox" />
+                                    <input type="checkbox" className="checkbox" onClick={toggleAllInputs} />
                                 </label>
                             </th>
                             <th>Away</th>
@@ -228,8 +239,7 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
 
                         {games.map((g,i) => {
                             return (
-
-                                    <Entry key={i+1} game={g}/>
+                                    <Entry key={i+1} game={g} showInput={showInput}/>
                             ) 
                         })}
                     </tbody>
