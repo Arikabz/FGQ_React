@@ -13,7 +13,6 @@ const Dashboard = () => {
     const [token, setToken] = useState('');
     const { user, getAccessTokenSilently} = useAuth0();
     const {email, name} = user;
-    const [firstTime, setFirstTime] = useState(false);
     const [registered, setRegistered] = useState(true);
 
     const getToken = async() => {
@@ -31,7 +30,6 @@ const Dashboard = () => {
     useEffect(()=>{
         getToken().then(t=>{
         checkUserAndRegister(email, name, t).then(res=>{
-                setFirstTime(res.firstTime)
                 if(res.firstTime===false){
                     getUserInfo(email, t).then(userInfo =>{
                         setRegistered(userInfo.registered)

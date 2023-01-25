@@ -60,7 +60,7 @@ const Entry = (props) => {
         if(!individualToggle){
         setShowInput(props.showInput)
         }
-    })
+    },[individualToggle, props.showInput])
 
     return  (
         <tr>
