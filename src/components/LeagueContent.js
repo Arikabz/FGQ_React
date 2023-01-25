@@ -7,6 +7,7 @@ import RadialProgress from './RadialProgress'
 
 const LeagueContent = (props) => {
     const [registered, setRegistered] = useState(true)
+    const [admin, setAdmin] = useState(false)
     const {user} = useAuth0();
     const [leagueID, setLeagueID] = useState('')
     const [leagueUsers, setLeagueUsers] = useState('')
@@ -17,6 +18,7 @@ const LeagueContent = (props) => {
         if(token&&leagueUsers===''){
             getUserInfo(user.email, token).then(res=> {
                 setRegistered(res.registered)
+                setAdmin(res.userData.admin)
                 setLeagueID(res.userData.leagueID)
                 setPoints(res.userData.points)
                 getLeagueUsers(res.userData.leagueID, token).then(x=>{
@@ -30,7 +32,7 @@ const LeagueContent = (props) => {
     if(leagueID!==''&&leagueUsers!==''){
     return (
         <div className=''>
-            <Pwofile token={token} leagueUsers={leagueUsers} leagueID={leagueID} points={points}/>
+            <Pwofile admin={admin} token={token} leagueUsers={leagueUsers} leagueID={leagueID} points={points}/>
             <LeagueTable token={props.token} leagueUsers={leagueUsers} leagueID={leagueID} registered={registered}/>
         </div>
 

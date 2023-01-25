@@ -3,6 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 const Pwofile = (props) => {
     const {user, isAuthenticated, isLoading } = useAuth0();
+    const admin = props.admin;
     const leagueUsers = props.leagueUsers;
     const position = leagueUsers.indexOf(leagueUsers.find(e=> e.email === user.email))+1;
     const leagueID = props.leagueID;
@@ -45,6 +46,9 @@ const Pwofile = (props) => {
                             </div>
                         </div>
                     </div>
+                    {admin &&
+                        <div className="text-secondary">ADMIN</div>
+                    }
                     <div className="stat-value">{leagueID}</div>
                     <div className="stat-title">League ID</div>
                     <div className="stat-desc text-secondary">{user.email}</div>

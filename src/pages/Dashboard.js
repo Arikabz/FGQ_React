@@ -14,6 +14,8 @@ const Dashboard = () => {
     const { user, getAccessTokenSilently} = useAuth0();
     const {email, name} = user;
     const [registered, setRegistered] = useState(true);
+    const [userID, setUserID] = useState('');
+    const [leagueID, setLeagueID] = useState('');
 
     const getToken = async() => {
 
@@ -29,9 +31,12 @@ const Dashboard = () => {
 
     useEffect(()=>{
         getToken().then(t=>{
+        setToken(t)
         checkUserAndRegister(email, name, t).then(res=>{
                 if(res.firstTime===false){
                     getUserInfo(email, t).then(userInfo =>{
+                        setUserID(userInfo.userData._id)
+                        setLeagueID(userInfo.userData.leagueID)
                         setRegistered(userInfo.registered)
                         return
                     })
@@ -53,15 +58,17 @@ const Dashboard = () => {
     {
         return <Navigate to='/profile'/>
 
-    } else{
+    } else if(token && userID&&leagueID){
     return (
         (
             <div>
-                <NavbarLoggedIn content={<TableWithVisuals token={token}  />} footer={<Footer/>}/>
+                <NavbarLoggedIn content={<TableWithVisuals token={token} leagueID={leagueID} userID={userID} registered={registered}  />} footer={<Footer/>}/>
             </div>
         )  
     )
 
+    } else {
+        return <RadialProgress/>
     }
 }
 

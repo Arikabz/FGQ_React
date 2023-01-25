@@ -68,6 +68,28 @@ export async function getUserInfo(email, token) {
     }
 }
 
+export async function makePredictionTemplate(userID, leagueID, week, token){
+    try {
+        const res = await fetch(`http://localhost:6969/predictions/makePredictionTemplate`,
+            {
+                headers: {
+                    'Content-Type': 'Application/Json',
+                    Authorization: `Bearer ${token}`,
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    userID: userID,
+                    weeknum: week,
+                    leagueID: leagueID,
+                })
+            }
+        )
+        return res.json();
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export async function createLeague(email, token){
     try {
         const res = await fetch(`http://localhost:6969/league/createLeague`,

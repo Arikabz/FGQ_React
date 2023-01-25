@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import Select from '../components/Select'
 import RadialProgress from '../components/RadialProgress'
-import { getWeek, getCurrentWeek, updateSeason, checkUpdate} from '../services/Services'
-import { useAuth0} from '@auth0/auth0-react'
+import {makePredictionTemplate, getWeek, getCurrentWeek, updateSeason, checkUpdate} from '../services/Services'
 
 
 const Entry = (props) => {
@@ -81,7 +80,7 @@ const Entry = (props) => {
                         <div className="text-sm opacity-50">{awayScore}</div>
                     </div>
                 </div>
-            {showInput &&
+            {showInput && !happened &&
                     <div>
                         <input type="text" placeholder="Type here" className="input input-bordered input-primary w-full max-w-xs" />
                     </div>
@@ -91,7 +90,7 @@ const Entry = (props) => {
                 <td>
                     <div className="font-bold">{props.game.Time}</div>
                     <div className="text-sm opacity-50">{props.game.TV.length>4 ? 'CBS' : props.game.TV}</div>
-            {showInput &&
+            {showInput && !happened &&
                     <div>
                         <button className="btn btn-primary">Submit</button>
                     </div>
@@ -126,7 +125,7 @@ const Entry = (props) => {
                         <div className="text-sm opacity-50">{homeScore}</div>
                     </div>
                 </div>
-            {showInput &&
+            {showInput && !happened &&
                     <div>
                         <input type="text" placeholder="Type here" className="input input-bordered input-primary w-full max-w-xs" />
                     </div>
@@ -147,56 +146,51 @@ const Entry = (props) => {
     )
 }
 
-const TableWithVisuals = ({ weekNum, thisWeek}) => {
-    const [token, setToken] = useState('');
+const TableWithVisuals = (props ) => {
+    const token = props.token;
+    const userID = props.userID;
+    const leagueID = props.leagueID;
     const [showInput, setShowInput] = useState(false);
     const [stuff, setStuff] = useState({lmao:'yes'});
     const [currentWeek, setCurrentWeek] = useState('')
-    const {getAccessTokenSilently} = useAuth0();
 
-    const getToken = async() => {
-        try {
-            const token = await getAccessTokenSilently();
-            setToken(token);
-            return token 
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
     useEffect(()=>{
         //const token = await getToken()
 
-        getToken().then(t =>
-        {
-                checkUpdate(1,t).then(m=> {
-                    const lastUpdated = new Date(m.result[0].updatedAt) 
-                    const miliseconds = lastUpdated.getTime()
-                    const now = Date.now()
-                    console.log('now: '+ now)
-                    console.log('last: '+ miliseconds)
-                    if(miliseconds + 259300000 < now){
-                        console.log('season needs updating')
-                        updateSeason(t).then(z=>{
-                            getCurrentWeek(t).then(x=> {
-                                setCurrentWeek(x)
-                                getWeek(x.result[0].split(' ')[1], t)
-                                    .then(y=>setStuff(y))
-                            })
+        checkUpdate(1,token).then(m=> {
+            const lastUpdated = new Date(m.result[0].updatedAt) 
+            const miliseconds = lastUpdated.getTime()
+            const now = Date.now()
+            console.log('now: '+ now)
+            console.log('last: '+ miliseconds)
+            if(miliseconds + 259300000 < now){
+                console.log('season needs updating')
+                updateSeason(token).then(z=>{
+                    getCurrentWeek(token).then(x=> {
+                        setCurrentWeek(x)
+                        if(userID){
+                            makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token)
+                        }
+                        getWeek(x.result[0].split(' ')[1], token)
+                            .then(y=>setStuff(y))
+                    })
 
-                        })
-                    } else{
-                        console.log('no update')
-                        getCurrentWeek(t).then(x=> {
-                            setCurrentWeek(x)
-                            getWeek(x.result[0].split(' ')[1], t)
-                                .then(y=>setStuff(y))
-                        })
-
-                    }
                 })
+            } else{
+                console.log('no update')
+                getCurrentWeek(token).then(x=> {
+                    setCurrentWeek(x)
+                    if(userID){
+                        makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token)
+                    }
+                    getWeek(x.result[0].split(' ')[1], token)
+                        .then(y=>setStuff(y))
+                })
+
             }
-        )
+        })
+
         //getWeek(currentWeek, token).then(y=>setStuff(y))
         //getWeek(token).then(x=> setStuff(x))
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -239,7 +233,7 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
 
                         {games.map((g,i) => {
                             return (
-                                    <Entry key={i+1} game={g} showInput={showInput}/>
+                                <Entry key={i+1} game={g} showInput={showInput}/>
                             ) 
                         })}
                     </tbody>
