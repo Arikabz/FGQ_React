@@ -39,7 +39,6 @@ const NavbarSidebar = (props) => {
                 <label htmlFor="my-drawer-3" className="drawer-overlay"></label> 
                 <ul className="menu p-4 overflow-y-auto w-80 bg-base-100">
                     <li><Link to='/dashboard' className=''>Dashboard</Link></li>
-                    <li><Link to='/leaderboard' className=''>Leaderboard</Link></li>
                     <li><Link to='/profile' className=''>Perfil</Link></li>
                     <li><button onClick={()=>logout({ returnTo: window.location.origin})} className=''>Log Out</button></li>
                 </ul>

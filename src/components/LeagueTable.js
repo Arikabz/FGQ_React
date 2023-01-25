@@ -1,30 +1,25 @@
 import { useAuth0, withAuthenticationRequired} from '@auth0/auth0-react'
 import {useState, useEffect} from 'react'
-import {getUserInfo, registerUserInLeague, createLeague} from '../services/Services'
+import { registerUserInLeague, createLeague} from '../services/Services'
 import RadialProgress from './RadialProgress';
+import LeagueTableContent from './LeagueTableContent';
 
-const LeagueTable = () => {
-    const {user, getAccessTokenSilently} = useAuth0();
-    const [leagueID, setLeagueID] = useState('');
-    const [token, setToken] = useState('');
-    const [registered, setRegistered] = useState(true);
-
-    const getToken = async () =>{
-        try {
-            const tokenGot = await getAccessTokenSilently();
-            setToken(tokenGot);
-            return tokenGot;
-        } catch (error) {
-            console.log(error)
-        }
-    }
+const LeagueTable = (props) => {
+    const {user} = useAuth0();
+    const [leagueID, setLeagueID] = useState(props.leagueID);
+    //const [token, setToken] = useState('');
+    const token = props.token;
+    const leagueUsers = props.leagueUsers;
+    const [registered, setRegistered] = useState(props.registered);
 
     const newLeague = async () => {
         try {
             const response = await createLeague(user.email, token)
             setLeagueID(response.leagueID)
             setRegistered(true)
-            console.log(response)
+            if(response.league === 'valid'){
+                window.location.reload(false)
+            }
         } catch (error) {
             console.log(error)
         }
@@ -42,6 +37,9 @@ const LeagueTable = () => {
             if(response.league === 'invalid'){
                 alert('Invalid league')
             }
+            else{
+                window.location.reload(false)
+            }
             
         } catch (error) {
             console.log(error)
@@ -53,23 +51,13 @@ const LeagueTable = () => {
     }
 
     useEffect(()=>{
-        if(!token){
-        getToken().then(t=>{
-            getUserInfo(user.email, t).then(res => {
-                setRegistered(res.registered)
-                console.log(res.registered)
-            })
-            //leagueCheks here
-            //if not registered in League render a message
-        })
-        }
     })
 
 
-    if(registered)
+    if(registered&&token)
 {
         return (
-        <h1>Table here</h1>
+        <LeagueTableContent leagueUsers={leagueUsers} token={token} leagueID={leagueID} email={user.email}/>
         )
     }
     else{
@@ -90,10 +78,10 @@ const LeagueTable = () => {
                             </div>
                             <div className='flex space-x-3'>
                                 <div className="basis-1/2 form-control mt-6">
-                                    <button className="btn btn-primary" onClick={registerUser}>Registrarse</button>
+                                    <button className="btn btn-primary" onClick={registerUser}>Unirse</button>
                                 </div>
                                 <div className="form-control mt-6 basis-1/2">
-                                    <button className="btn btn-primary" onClick={newLeague} >Nueva Liga</button>
+                                    <button className="btn btn-primary" onClick={newLeague} >Crear Liga</button>
                                 </div>
                             </div>
                         </div>

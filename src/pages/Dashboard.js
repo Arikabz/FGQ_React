@@ -1,7 +1,7 @@
 import TableWithVisuals from '../components/TableWithVisuals'
 import NavbarLoggedIn from '../components/NavbarLoggedIn'
 import Footer from '../components/FooterSlim'
-import {checkUserAndRegister} from '../services/Services'
+import {checkUserAndRegister, getUserInfo} from '../services/Services'
 import { Navigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react'
@@ -14,6 +14,7 @@ const Dashboard = () => {
     const { user, getAccessTokenSilently} = useAuth0();
     const {email, name} = user;
     const [firstTime, setFirstTime] = useState(false);
+    const [registered, setRegistered] = useState(true);
 
     const getToken = async() => {
 
@@ -32,12 +33,13 @@ const Dashboard = () => {
         checkUserAndRegister(email, name, t).then(res=>{
                 setFirstTime(res.firstTime)
                 if(res.firstTime===false){
-                    console.log('First')
-                    return
+                    getUserInfo(email, t).then(userInfo =>{
+                        setRegistered(userInfo.registered)
+                        return
+                    })
                     //useNavigate('/profile')
                     //alert('It is the first time!')
                 }else{
-                    console.log('Not First')
                     //alert('It is not the first time.')
                     return
                 }
@@ -49,9 +51,9 @@ const Dashboard = () => {
         //updateSeason().then(res => console.log(res))
         //getCurrentWeek().then(x=> setWeek(x.result[0]))
    })
-    if(!firstTime)
+    if(!registered)
     {
-        return <Navigate to='/league'/>
+        return <Navigate to='/profile'/>
 
     } else{
     return (
