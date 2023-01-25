@@ -7,6 +7,7 @@ import { useAuth0} from '@auth0/auth0-react'
 
 const Entry = (props) => {
     let homeScore, awayScore;
+    const [showInput, setShowInput] = useState(false)
     let happened = props.game.result || false
     if(props.game.result){
         let scores = props.game.result.split(' ')
@@ -49,12 +50,16 @@ const Entry = (props) => {
         return current<other ? str + ' text-red-600' : str + ' text-green-600'
     }
 
+    const showGuessInput = () => {
+        setShowInput(!showInput)
+    }
 
-    return (
+
+    return  (
         <tr>
             <th>
-                <label>
-                    <input type="checkbox" className="checkbox" />
+                <label className=''>
+                    <input type="checkbox" className="checkbox" onClick={showGuessInput} />
                 </label>
             </th>
             <td>
@@ -69,11 +74,21 @@ const Entry = (props) => {
                         <div className="text-sm opacity-50">{awayScore}</div>
                     </div>
                 </div>
+            {showInput &&
+                    <div>
+                        <input type="text" placeholder="Type here" className="input input-bordered input-primary w-full max-w-xs" />
+                    </div>
+            }
             </td>
             {!happened &&
                 <td>
                     <div className="font-bold">{props.game.Time}</div>
                     <div className="text-sm opacity-50">{props.game.TV.length>4 ? 'CBS' : props.game.TV}</div>
+            {showInput &&
+                    <div>
+                        <button className="btn btn-primary">Submit</button>
+                    </div>
+            }
                 </td>
         }
             {happened &&
@@ -104,6 +119,11 @@ const Entry = (props) => {
                         <div className="text-sm opacity-50">{homeScore}</div>
                     </div>
                 </div>
+            {showInput &&
+                    <div>
+                        <input type="text" placeholder="Type here" className="input input-bordered input-primary w-full max-w-xs" />
+                    </div>
+            }
             </td>
             <td>
                 {!happened && 
@@ -142,7 +162,6 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
         getToken().then(t =>
         {
                 checkUpdate(1,t).then(m=> {
-                    console.log(m.result[0].updatedAt)
                     const lastUpdated = new Date(m.result[0].updatedAt) 
                     const miliseconds = lastUpdated.getTime()
                     const now = Date.now()
@@ -208,7 +227,10 @@ const TableWithVisuals = ({ weekNum, thisWeek}) => {
                     <tbody>
 
                         {games.map((g,i) => {
-                            return <Entry key={i+1} game={g}/>
+                            return (
+
+                                    <Entry key={i+1} game={g}/>
+                            ) 
                         })}
                     </tbody>
                     <tfoot>
