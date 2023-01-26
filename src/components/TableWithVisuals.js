@@ -6,9 +6,12 @@ import {makePredictionTemplate, getWeek, getCurrentWeek, updateSeason, checkUpda
 
 const Entry = (props) => {
     let homeScore, awayScore;
+    const [prediction, setPrediction] = useState('');
+    const awayPrediction = prediction.awayPrediction;
+    const homePrediction = prediction.homePrediction;
     const [showInput, setShowInput] = useState(props.showInput);
     const [individualToggle, setIndividualToggle] = useState(false);
-    let happened = props.game.result || false
+    const happened = props.game.result || false;
     if(props.game.result){
         let scores = props.game.result.split(' ')
 
@@ -57,9 +60,10 @@ const Entry = (props) => {
 
     useEffect(()=>{
         if(!individualToggle){
-        setShowInput(props.showInput)
+            setShowInput(props.showInput)
         }
-    },[individualToggle, props.showInput])
+        setPrediction(props.prediction)
+    },[individualToggle, props.showInput, props.prediction])
 
     return  (
         <tr>
@@ -77,10 +81,12 @@ const Entry = (props) => {
                     </div>
                     <div>
                         <div className="font-bold">{props.game.Away}</div>
-                        <div className="text-sm opacity-50">{awayScore}</div>
+                        { awayPrediction &&
+                        <div className="text-accent">{awayPrediction}</div>
+                    }
                     </div>
                 </div>
-            {showInput && !happened &&
+                {showInput && !happened && !awayPrediction &&
                     <div>
                         <input type="text" placeholder="Type here" className="input input-bordered input-primary w-full max-w-xs" />
                     </div>
@@ -90,11 +96,11 @@ const Entry = (props) => {
                 <td>
                     <div className="font-bold">{props.game.Time}</div>
                     <div className="text-sm opacity-50">{props.game.TV.length>4 ? 'CBS' : props.game.TV}</div>
-            {showInput && !happened &&
-                    <div>
-                        <button className="btn btn-primary">Submit</button>
-                    </div>
-            }
+                    {showInput && !happened && !awayPrediction &&
+                        <div>
+                            <button className="btn btn-primary">Submit</button>
+                        </div>
+                }
                 </td>
         }
             {happened &&
@@ -122,10 +128,12 @@ const Entry = (props) => {
                     </div>
                     <div>
                         <div className="font-bold">{props.game.Home}</div>
-                        <div className="text-sm opacity-50">{homeScore}</div>
+                        { homePrediction &&
+                        <div className=" text-accent ">{homePrediction}</div>
+                    }
                     </div>
                 </div>
-            {showInput && !happened &&
+                {showInput && !happened && !homePrediction &&
                     <div>
                         <input type="text" placeholder="Type here" className="input input-bordered input-primary w-full max-w-xs" />
                     </div>
@@ -153,6 +161,8 @@ const TableWithVisuals = (props ) => {
     const [showInput, setShowInput] = useState(false);
     const [stuff, setStuff] = useState({lmao:'yes'});
     const [currentWeek, setCurrentWeek] = useState('')
+    const [firstUpdate, setFirstUpdate] = useState(true);
+    const [predictionTemplate, setPredictionTemplate] = useState('')
 
 
     useEffect(()=>{
@@ -169,8 +179,10 @@ const TableWithVisuals = (props ) => {
                 updateSeason(token).then(z=>{
                     getCurrentWeek(token).then(x=> {
                         setCurrentWeek(x)
-                        if(userID){
-                            makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token)
+                        if(userID&&firstUpdate){
+                            makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token).then(x=>{
+                                setPredictionTemplate(x.predictionTemplate)
+                            })
                         }
                         getWeek(x.result[0].split(' ')[1], token)
                             .then(y=>setStuff(y))
@@ -181,8 +193,10 @@ const TableWithVisuals = (props ) => {
                 console.log('no update')
                 getCurrentWeek(token).then(x=> {
                     setCurrentWeek(x)
-                    if(userID){
-                        makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token)
+                    if(userID&&firstUpdate){
+                        makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token).then(z=>{
+                            setPredictionTemplate(z.predictionTemplate)
+                        })
                     }
                     getWeek(x.result[0].split(' ')[1], token)
                         .then(y=>setStuff(y))
@@ -198,10 +212,22 @@ const TableWithVisuals = (props ) => {
     const changeWeek = (num) => {
         console.log('change week to:')
         console.log(num)
-        getWeek(num, token).then(x=> setStuff(x))
+        makePredictionTemplate(userID, leagueID, num, token).then(z=>{
+            getWeek(num, token).then(x=> {
+                setPredictionTemplate(z.predictionTemplate)
+                setStuff(x)
+            })
+        })
     }
     const toggleAllInputs = () => {
         setShowInput(!showInput)
+    }
+    const rowPrediction = (i) => {
+        if(predictionTemplate.predictions!==undefined){
+            return predictionTemplate.predictions[i]
+        }else {
+            return ''
+        }
     }
     let games = []
     if(stuff.result){
@@ -209,53 +235,55 @@ const TableWithVisuals = (props ) => {
         games = stuff.result[0].Games || []
         //console.log(stuff.result[0].Games[1].Home)
     }
-    return (
-        <div className="overflow-x-auto w-full">
-            {stuff.result &&
-                <table className="table w-full">
-                    <thead>
-                        <tr>
-                            <th>
-                                <label>
-                                    <input type="checkbox" className="checkbox" onClick={toggleAllInputs} />
-                                </label>
-                            </th>
-                            <th>Away</th>
-                            <th></th>
-                            <th>Home</th>
-                            <th>More</th>
-                            <th>
-                                <Select thisWeek={currentWeek.result[0]} onChange={changeWeek} num={18<Number(currentWeek.result[0].split(' ')[1]) ? Number(currentWeek.result[0].split(' ')[1]) : 18}/>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
+    if(predictionTemplate){
+        return (
+            <div className="overflow-x-auto w-full">
+                {stuff.result &&
+                    <table className="table w-full">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" className="checkbox" onClick={toggleAllInputs} />
+                                    </label>
+                                </th>
+                                <th>Away</th>
+                                <th></th>
+                                <th>Home</th>
+                                <th>More</th>
+                                <th>
+                                    <Select thisWeek={currentWeek.result[0]} onChange={changeWeek} num={18<Number(currentWeek.result[0].split(' ')[1]) ? Number(currentWeek.result[0].split(' ')[1]) : 18}/>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {games.map((g,i) => {
+                                return (
+                                    <Entry key={i+1} game={g} prediction={rowPrediction(i)} showInput={showInput}/>
+                                ) 
+                            })}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>Away</th>
+                                <th></th>
+                                <th>Home</th>
+                                <th>More</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
 
-                        {games.map((g,i) => {
-                            return (
-                                <Entry key={i+1} game={g} showInput={showInput}/>
-                            ) 
-                        })}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th></th>
-                            <th>Away</th>
-                            <th></th>
-                            <th>Home</th>
-                            <th>More</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
+                    </table>
+            }
+                {!stuff.result &&
 
-                </table>
-        }
-            {!stuff.result &&
+                    <RadialProgress />
+            }
+            </div>
+        )
 
-                <RadialProgress />
-        }
-        </div>
-    )
+    } else return <RadialProgress/>
 }
 
 export default TableWithVisuals
