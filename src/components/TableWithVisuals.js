@@ -1,14 +1,20 @@
 import React, {useEffect, useState} from 'react'
 import Select from '../components/Select'
 import RadialProgress from '../components/RadialProgress'
-import {makePredictionTemplate, getWeek, getCurrentWeek, updateSeason, checkUpdate} from '../services/Services'
+import {makePredictionTemplate, getWeek, getCurrentWeek, updateSeason, checkUpdate, uploadSinglePrediction} from '../services/Services'
 
 
 const Entry = (props) => {
     let homeScore, awayScore;
     const [prediction, setPrediction] = useState('');
+    const [week, setWeek] = useState('');
+    const [inputAway, setInputAway] = useState('');
+    const [inputHome, setInputHome] = useState('');
     const awayPrediction = prediction.awayPrediction;
+    const token = props.token;
     const homePrediction = prediction.homePrediction;
+    const userID = props.userID;
+    const leagueID = props.leagueID;
     const [showInput, setShowInput] = useState(props.showInput);
     const [individualToggle, setIndividualToggle] = useState(false);
     const happened = props.game.result || false;
@@ -58,11 +64,30 @@ const Entry = (props) => {
         setIndividualToggle(!individualToggle)
     }
 
+    const submitPrediction = async () => {
+        console.log('user: ' +userID)
+        console.log('league: '+leagueID)
+        console.log('league: '+week)
+        console.log('away: '+inputAway)
+        console.log('home: '+inputHome)
+        console.log(token)
+        //const response = await uploadSinglePrediction(userID, leagueID, week, inputAway, inputHome, token)
+    }
+    const handleAway = (e) => {
+        setInputAway(e.target.value)
+        console.log(inputAway)
+    }
+    const handleHome = (e) => {
+        setInputHome(e.target.value)
+        console.log(inputHome)
+    }
+
     useEffect(()=>{
         if(!individualToggle){
             setShowInput(props.showInput)
         }
         setPrediction(props.prediction)
+        setWeek(props.week)
     },[individualToggle, props.showInput, props.prediction])
 
     return  (
@@ -88,7 +113,7 @@ const Entry = (props) => {
                 </div>
                 {showInput && !happened && !awayPrediction &&
                     <div>
-                        <input type="text" placeholder="Type here" className="input input-bordered input-primary w-full max-w-xs" />
+                        <input onChange={handleAway} type="text" placeholder="Type here" className="input input-bordered input-primary w-full max-w-xs" />
                     </div>
             }
             </td>
@@ -98,7 +123,7 @@ const Entry = (props) => {
                     <div className="text-sm opacity-50">{props.game.TV.length>4 ? 'CBS' : props.game.TV}</div>
                     {showInput && !happened && !awayPrediction &&
                         <div>
-                            <button className="btn btn-primary">Submit</button>
+                            <button onClick={submitPrediction} className="btn btn-primary">Submit</button>
                         </div>
                 }
                 </td>
@@ -135,7 +160,7 @@ const Entry = (props) => {
                 </div>
                 {showInput && !happened && !homePrediction &&
                     <div>
-                        <input type="text" placeholder="Type here" className="input input-bordered input-primary w-full max-w-xs" />
+                        <input type="text" onChange={handleHome} placeholder="Type here" className="input input-bordered input-primary w-full max-w-xs" />
                     </div>
             }
             </td>
@@ -161,6 +186,7 @@ const TableWithVisuals = (props ) => {
     const [showInput, setShowInput] = useState(false);
     const [stuff, setStuff] = useState({lmao:'yes'});
     const [currentWeek, setCurrentWeek] = useState('')
+    const [selectedWeek, setSelectedWeek] = useState('')
     const [firstUpdate, setFirstUpdate] = useState(true);
     const [predictionTemplate, setPredictionTemplate] = useState('')
 
@@ -179,6 +205,7 @@ const TableWithVisuals = (props ) => {
                 updateSeason(token).then(z=>{
                     getCurrentWeek(token).then(x=> {
                         setCurrentWeek(x)
+                        setSelectedWeek(x.result[0].split(' ')[1])
                         if(userID&&firstUpdate){
                             makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token).then(x=>{
                                 setPredictionTemplate(x.predictionTemplate)
@@ -193,6 +220,7 @@ const TableWithVisuals = (props ) => {
                 console.log('no update')
                 getCurrentWeek(token).then(x=> {
                     setCurrentWeek(x)
+                    setSelectedWeek(x.result[0].split(' ')[1])
                     if(userID&&firstUpdate){
                         makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token).then(z=>{
                             setPredictionTemplate(z.predictionTemplate)
@@ -216,6 +244,7 @@ const TableWithVisuals = (props ) => {
             getWeek(num, token).then(x=> {
                 setPredictionTemplate(z.predictionTemplate)
                 setStuff(x)
+                setSelectedWeek(num)
             })
         })
     }
@@ -259,7 +288,7 @@ const TableWithVisuals = (props ) => {
                         <tbody>
                             {games.map((g,i) => {
                                 return (
-                                    <Entry key={i+1} game={g} prediction={rowPrediction(i)} showInput={showInput}/>
+                                    <Entry token={token} key={i+1} week={selectedWeek} userID={userID} leagueID={leagueID} game={g} prediction={rowPrediction(i)} showInput={showInput}/>
                                 ) 
                             })}
                         </tbody>

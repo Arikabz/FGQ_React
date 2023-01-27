@@ -68,6 +68,30 @@ export async function getUserInfo(email, token) {
     }
 }
 
+export async function uploadSinglePrediction(userID, leagueID, week, awayGuess, homeGuess, token){
+    try {
+        const res = await fetch(`http://localhost:6969/predictions/uploadSinglePrediction`,
+            {
+                headers: {
+                    'Content-Type': 'Application/Json',
+                    Authorization: `Bearer ${token}`,
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    userID: userID,
+                    weeknum: week,
+                    leagueID: leagueID,
+                    awayGuess: awayGuess,
+                    homeGuess: homeGuess,
+                })
+            }
+        )
+        return res.json();
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export async function makePredictionTemplate(userID, leagueID, week, token){
     try {
         const res = await fetch(`http://localhost:6969/predictions/makePredictionTemplate`,
