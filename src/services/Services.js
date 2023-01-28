@@ -68,7 +68,7 @@ export async function getUserInfo(email, token) {
     }
 }
 
-export async function uploadSinglePrediction(userID, leagueID, week, awayGuess, homeGuess, token){
+export async function uploadSinglePrediction(userID, leagueID, week, gameNum, awayGuess, homeGuess, token){
     try {
         const res = await fetch(`http://localhost:6969/predictions/uploadSinglePrediction`,
             {
@@ -81,6 +81,7 @@ export async function uploadSinglePrediction(userID, leagueID, week, awayGuess, 
                     userID: userID,
                     weeknum: week,
                     leagueID: leagueID,
+                    gameNum: gameNum,
                     awayGuess: awayGuess,
                     homeGuess: homeGuess,
                 })

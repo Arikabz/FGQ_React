@@ -13,6 +13,7 @@ const Entry = (props) => {
     const awayPrediction = prediction.awayPrediction;
     const token = props.token;
     const homePrediction = prediction.homePrediction;
+    const gameNum = prediction.gameNum;
     const userID = props.userID;
     const leagueID = props.leagueID;
     const [showInput, setShowInput] = useState(props.showInput);
@@ -65,21 +66,20 @@ const Entry = (props) => {
     }
 
     const submitPrediction = async () => {
+        console.log('gameNum: ' +gameNum)
         console.log('user: ' +userID)
         console.log('league: '+leagueID)
         console.log('league: '+week)
         console.log('away: '+inputAway)
         console.log('home: '+inputHome)
         console.log(token)
-        //const response = await uploadSinglePrediction(userID, leagueID, week, inputAway, inputHome, token)
+        //const response = await uploadSinglePrediction(userID, leagueID, week, gameNum inputAway, inputHome, token)
     }
     const handleAway = (e) => {
         setInputAway(e.target.value)
-        console.log(inputAway)
     }
     const handleHome = (e) => {
         setInputHome(e.target.value)
-        console.log(inputHome)
     }
 
     useEffect(()=>{
@@ -88,7 +88,7 @@ const Entry = (props) => {
         }
         setPrediction(props.prediction)
         setWeek(props.week)
-    },[individualToggle, props.showInput, props.prediction])
+    },[individualToggle, props.showInput, props.prediction, props.week])
 
     return  (
         <tr>
@@ -187,7 +187,6 @@ const TableWithVisuals = (props ) => {
     const [stuff, setStuff] = useState({lmao:'yes'});
     const [currentWeek, setCurrentWeek] = useState('')
     const [selectedWeek, setSelectedWeek] = useState('')
-    const [firstUpdate, setFirstUpdate] = useState(true);
     const [predictionTemplate, setPredictionTemplate] = useState('')
 
 
@@ -206,7 +205,7 @@ const TableWithVisuals = (props ) => {
                     getCurrentWeek(token).then(x=> {
                         setCurrentWeek(x)
                         setSelectedWeek(x.result[0].split(' ')[1])
-                        if(userID&&firstUpdate){
+                        if(userID){
                             makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token).then(x=>{
                                 setPredictionTemplate(x.predictionTemplate)
                             })
@@ -221,7 +220,7 @@ const TableWithVisuals = (props ) => {
                 getCurrentWeek(token).then(x=> {
                     setCurrentWeek(x)
                     setSelectedWeek(x.result[0].split(' ')[1])
-                    if(userID&&firstUpdate){
+                    if(userID){
                         makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token).then(z=>{
                             setPredictionTemplate(z.predictionTemplate)
                         })
