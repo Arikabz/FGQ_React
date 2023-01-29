@@ -10,9 +10,9 @@ const Entry = (props) => {
     const [week, setWeek] = useState('');
     const [inputAway, setInputAway] = useState('');
     const [inputHome, setInputHome] = useState('');
-    const awayPrediction = prediction.awayPrediction;
+    const [awayPrediction, setAwayPrediction] = useState(prediction.awayPrediction);
+    const [homePrediction, setHomePrediction] = useState(prediction.homePrediction);
     const token = props.token;
-    const homePrediction = prediction.homePrediction;
     const gameNum = prediction.gameNum;
     const userID = props.userID;
     const leagueID = props.leagueID;
@@ -61,23 +61,30 @@ const Entry = (props) => {
     }
 
     const showGuessInput = () => {
-        setShowInput(!showInput)
-        setIndividualToggle(!individualToggle)
+        if(!awayPrediction&&!homePrediction){
+            setShowInput(!showInput)
+            setIndividualToggle(!individualToggle)
+        }
     }
 
     const submitPrediction = async () => {
-        console.log('gameNum: ' +gameNum)
-        console.log('user: ' +userID)
-        console.log('league: '+leagueID)
-        console.log('league: '+week)
-        console.log('away: '+inputAway)
-        console.log('home: '+inputHome)
-        console.log(token)
-        //const response = await uploadSinglePrediction(userID, leagueID, week, gameNum inputAway, inputHome, token)
+        if(Number(inputAway)&&Number(inputHome)){
+            const response = await uploadSinglePrediction(userID, leagueID, week, gameNum, inputAway, inputHome, token)
+            if(response.update){
+                setAwayPrediction(inputAway)
+                setHomePrediction(inputHome)
+            }
+            console.log('update succesful: '+response.update)
+        }
+        else{
+            alert('Predictions must be numbers.')
+        }
     }
+
     const handleAway = (e) => {
         setInputAway(e.target.value)
     }
+
     const handleHome = (e) => {
         setInputHome(e.target.value)
     }
@@ -86,6 +93,8 @@ const Entry = (props) => {
         if(!individualToggle){
             setShowInput(props.showInput)
         }
+        setHomePrediction(props.prediction.homePrediction)
+        setAwayPrediction(props.prediction.awayPrediction)
         setPrediction(props.prediction)
         setWeek(props.week)
     },[individualToggle, props.showInput, props.prediction, props.week])
@@ -105,9 +114,9 @@ const Entry = (props) => {
                         </div>
                     </div>
                     <div>
-                        <div className="font-bold">{props.game.Away}</div>
+                        <div className="font-bold">{props.game.Away.replace(/[\s\n\d]/g,'').split(/(?=[A-Z])/).join(' ')}</div>
                         { awayPrediction &&
-                        <div className="text-accent">{awayPrediction}</div>
+                            <div className="text-accent">{awayPrediction}</div>
                     }
                     </div>
                 </div>
@@ -152,9 +161,9 @@ const Entry = (props) => {
                         </div>
                     </div>
                     <div>
-                        <div className="font-bold">{props.game.Home}</div>
+                        <div className="font-bold">{props.game.Home.replace(/[\s\n\d]/g,'').split(/(?=[A-Z])/).join(' ')}</div>
                         { homePrediction &&
-                        <div className=" text-accent ">{homePrediction}</div>
+                            <div className=" text-accent ">{homePrediction}</div>
                     }
                     </div>
                 </div>
@@ -251,12 +260,13 @@ const TableWithVisuals = (props ) => {
         setShowInput(!showInput)
     }
     const rowPrediction = (i) => {
-        if(predictionTemplate.predictions!==undefined){
+        if(predictionTemplate.predictions){
             return predictionTemplate.predictions[i]
         }else {
             return ''
         }
     }
+
     let games = []
     if(stuff.result){
 

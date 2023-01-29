@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import {getUserInfo, getLeagueUsers} from '../services/Services'
+import {getUserInfo, getLeagueUsers, updatePoints, updateSeason} from '../services/Services'
 import {useAuth0} from '@auth0/auth0-react'
 import Pwofile from './Pwofile'
 import LeagueTable from './LeagueTable'
@@ -21,22 +21,31 @@ const LeagueContent = (props) => {
                 setAdmin(res.userData.admin)
                 setLeagueID(res.userData.leagueID)
                 setPoints(res.userData.points)
-                getLeagueUsers(res.userData.leagueID, token).then(x=>{
-                    setLeagueUsers(x.leagueMembers)
-                })
+                updatePoints(res.userData.leagueID, token).then(
+                    getLeagueUsers(res.userData.leagueID, token).then(x=>{
+                        setLeagueUsers(x.leagueMembers)
+                    })
+                )
             })
         }
 
     })
 
-    if(leagueID!==''&&leagueUsers!==''){
-    return (
-        <div className=''>
-            <Pwofile admin={admin} token={token} leagueUsers={leagueUsers} leagueID={leagueID} points={points}/>
-            <LeagueTable token={props.token} leagueUsers={leagueUsers} leagueID={leagueID} registered={registered}/>
-        </div>
+    const updatePointsfn = async () => {
+        console.log('click')
+        const res = await updatePoints(leagueID,token)
+        console.log(res)
+    }
 
-    )
+    if(leagueID!==''&&leagueUsers!==''){
+        return (
+            <div className=''>
+                <Pwofile admin={admin} token={token} leagueUsers={leagueUsers} leagueID={leagueID} points={points}/>
+                <LeagueTable token={props.token} leagueUsers={leagueUsers} leagueID={leagueID} registered={registered}/>
+                <button className='btn' onClick={updatePointsfn}>update points</button>
+            </div>
+
+        )
     }
     else{
         return <RadialProgress/>

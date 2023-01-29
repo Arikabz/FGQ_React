@@ -48,6 +48,25 @@ export async function getLeagueUsers(leagueID, token) {
     }
 }
 
+export async function updatePoints(leagueID, token) {
+    try{
+        const res = await fetch(`http://localhost:6969/league/updatePoints`,
+            {
+                headers: {
+                    'Content-Type': 'Application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    leagueID: leagueID,
+                })
+            }
+        )
+        return await res.json();
+    } catch (error){
+        console.log(error)
+    }
+}
 export async function getUserInfo(email, token) {
     try{
         const res = await fetch(`http://localhost:6969/user/getUserInfo`,
