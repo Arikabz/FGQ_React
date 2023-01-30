@@ -215,8 +215,8 @@ const TableWithVisuals = (props ) => {
                         setCurrentWeek(x)
                         setSelectedWeek(x.result[0].split(' ')[1])
                         if(userID){
-                            makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token).then(x=>{
-                                setPredictionTemplate(x.predictionTemplate)
+                            makePredictionTemplate(userID, leagueID, x.result[0].split(' ')[1], token).then(template=>{
+                                setPredictionTemplate(template.predictionTemplate)
                             })
                         }
                         getWeek(x.result[0].split(' ')[1], token)
@@ -249,8 +249,12 @@ const TableWithVisuals = (props ) => {
         console.log('change week to:')
         console.log(num)
         makePredictionTemplate(userID, leagueID, num, token).then(z=>{
+            if(z.new){
+            console.log('new template made')
+            console.log(z.predictionTemplate)
+            }
+            setPredictionTemplate(z.predictionTemplate)
             getWeek(num, token).then(x=> {
-                setPredictionTemplate(z.predictionTemplate)
                 setStuff(x)
                 setSelectedWeek(num)
             })

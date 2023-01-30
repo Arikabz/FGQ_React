@@ -5,6 +5,7 @@ import RadialProgress from './RadialProgress';
 import LeagueTableContent from './LeagueTableContent';
 
 const LeagueTable = (props) => {
+    const admin = props.admin;
     const {user} = useAuth0();
     const [leagueID, setLeagueID] = useState(props.leagueID);
     //const [token, setToken] = useState('');
@@ -51,13 +52,14 @@ const LeagueTable = (props) => {
     }
 
     useEffect(()=>{
-    })
+        setRegistered(props.registered)
+    },[props.registered])
 
 
     if(registered&&token)
 {
         return (
-        <LeagueTableContent leagueUsers={leagueUsers} token={token} leagueID={leagueID} email={user.email}/>
+        <LeagueTableContent admin={admin} leagueUsers={leagueUsers} token={token} leagueID={leagueID} email={user.email}/>
         )
     }
     else{

@@ -28,6 +28,28 @@ export async function checkUpdate(w, token) {
     }
 }
 
+export async function editExtraPoints(userID, points, reason, token) {
+    try{
+        const res = await fetch(`http://localhost:6969/user/editExtraPoints`,
+            {
+                headers: {
+                    'Content-Type': 'Application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    userID: userID,
+                    points: points,
+                    reason: reason,
+                })
+            }
+        )
+        return await res.json();
+    } catch (error){
+        console.log(error)
+    }
+}
+
 export async function getLeagueUsers(leagueID, token) {
     try{
         const res = await fetch(`http://localhost:6969/user/getLeagueUsers`,
