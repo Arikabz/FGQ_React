@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import Select from '../components/Select'
 import RadialProgress from '../components/RadialProgress'
+import Countdown from '../components/Countdown.js'
 import {makePredictionTemplate, getWeek, getCurrentWeek, updateSeason, checkUpdate, uploadSinglePrediction} from '../services/Services'
 
 
 const Entry = (props) => {
+    const getTime = () => props.getTime()
     let homeScore, awayScore;
     const [prediction, setPrediction] = useState('');
     const [week, setWeek] = useState('');
@@ -61,7 +63,8 @@ const Entry = (props) => {
     }
 
     const showGuessInput = () => {
-        if(!awayPrediction&&!homePrediction){
+        console.log(getTime())
+        if(!awayPrediction&&!homePrediction&&getTime()>0){
             setShowInput(!showInput)
             setIndividualToggle(!individualToggle)
         }
@@ -193,10 +196,12 @@ const TableWithVisuals = (props ) => {
     const userID = props.userID;
     const leagueID = props.leagueID;
     const [showInput, setShowInput] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(true);
     const [stuff, setStuff] = useState({lmao:'yes'});
     const [currentWeek, setCurrentWeek] = useState('')
     const [selectedWeek, setSelectedWeek] = useState('')
     const [predictionTemplate, setPredictionTemplate] = useState('')
+    const [thursday, setThursday] = useState('')
 
 
     useEffect(()=>{
@@ -220,7 +225,10 @@ const TableWithVisuals = (props ) => {
                             })
                         }
                         getWeek(x.result[0].split(' ')[1], token)
-                            .then(y=>setStuff(y))
+                            .then(y=>{
+                                setStuff(y)
+                                setThursday(y.result[0].dates[0])
+                            })
                     })
 
                 })
@@ -235,7 +243,10 @@ const TableWithVisuals = (props ) => {
                         })
                     }
                     getWeek(x.result[0].split(' ')[1], token)
-                        .then(y=>setStuff(y))
+                        .then(y=>{
+                            setStuff(y)
+                            setThursday(y.result[0].dates[0])
+                        })
                 })
 
             }
@@ -245,6 +256,11 @@ const TableWithVisuals = (props ) => {
         //getWeek(token).then(x=> setStuff(x))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
+
+    const updateTimeLeft = (time) => {
+        setTimeLeft(time)
+    }
+
     const changeWeek = (num) => {
         console.log('change week to:')
         console.log(num)
@@ -258,6 +274,9 @@ const TableWithVisuals = (props ) => {
     }
     const toggleAllInputs = () => {
         setShowInput(!showInput)
+    }
+    const getTime = () => {
+        return timeLeft;
     }
     const rowPrediction = (i) => {
         if(predictionTemplate.predictions){
@@ -276,6 +295,22 @@ const TableWithVisuals = (props ) => {
     if(predictionTemplate&&predictionTemplate.predictions){
         return (
             <div className="overflow-x-auto w-full">
+                {thursday!==''  && timeLeft && 
+                    <div className='flex-row'>
+                        <div className='grid grid-flox-col text-center flex-col justify-center'>
+                            <span className='badge-accent badge-outline my-2 flex flex-col badge '>Tiempo restante:</span>
+                        </div>
+                        <Countdown thursday={thursday} updateTimeLeft={updateTimeLeft}/>
+                    </div>
+
+            }
+                { !timeLeft  &&thursday!==''&&
+                    <div className='flex-row'>
+                        <div className='grid grid-flox-col text-center flex-col justify-center'>
+                            <span className='badge-accent badge-outline my-2 flex flex-col badge '>El tiempo se ha acabado.</span>
+                        </div>
+                    </div>
+            }
                 {stuff.result &&
                     <table className="table w-full">
                         <thead>
@@ -297,7 +332,7 @@ const TableWithVisuals = (props ) => {
                         <tbody>
                             {games.map((g,i) => {
                                 return (
-                                    <Entry token={token} key={i+1} week={selectedWeek} userID={userID} leagueID={leagueID} game={g} prediction={rowPrediction(i)} showInput={showInput}/>
+                                    <Entry getTime={getTime} token={token} key={i+1} week={selectedWeek} userID={userID} leagueID={leagueID} game={g} prediction={rowPrediction(i)} showInput={showInput}/>
                                 ) 
                             })}
                         </tbody>
