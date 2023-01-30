@@ -208,7 +208,7 @@ const TableWithVisuals = (props ) => {
             const now = Date.now()
             console.log('now: '+ now)
             console.log('last: '+ miliseconds)
-            if(miliseconds + 259300000 < now){
+            if(miliseconds + 1800000 < now){
                 console.log('season needs updating')
                 updateSeason(token).then(z=>{
                     getCurrentWeek(token).then(x=> {
