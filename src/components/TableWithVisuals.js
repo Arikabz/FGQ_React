@@ -249,14 +249,10 @@ const TableWithVisuals = (props ) => {
         console.log('change week to:')
         console.log(num)
         makePredictionTemplate(userID, leagueID, num, token).then(z=>{
-            if(z.new){
-            console.log('new template made')
-            console.log(z.predictionTemplate)
-            }
-            setPredictionTemplate(z.predictionTemplate)
             getWeek(num, token).then(x=> {
                 setStuff(x)
                 setSelectedWeek(num)
+                setPredictionTemplate(z.predictionTemplate)
             })
         })
     }
@@ -277,7 +273,7 @@ const TableWithVisuals = (props ) => {
         games = stuff.result[0].Games || []
         //console.log(stuff.result[0].Games[1].Home)
     }
-    if(predictionTemplate){
+    if(predictionTemplate&&predictionTemplate.predictions){
         return (
             <div className="overflow-x-auto w-full">
                 {stuff.result &&
