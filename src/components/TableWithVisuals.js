@@ -311,7 +311,7 @@ const TableWithVisuals = (props ) => {
                     </div>
             }
                 {stuff.result &&
-                    <table className="table w-full">
+                    <table className="table min-w-full">
                         <thead>
                             <tr>
                                 <th>
