@@ -17,8 +17,9 @@ const Auth0ProviderWithHistory = ({ children }) => {
         <Auth0Provider
             domain={domain}
             clientId={clientId}
-            redirectUri={'https://fgq.netlify.app/dashboard'}
             //onRedirectCallback={onRedirectCallback}
+            redirectUri={'https://fgq.netlify.app/dashboard'}
+            //redirectUri={'http://localhost:3000/dashboard'}
             useRefreshTokens
             cacheLocation='localstorage'
             audience={audience}

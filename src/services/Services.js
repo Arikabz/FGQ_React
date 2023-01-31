@@ -1,4 +1,4 @@
-const server = process.env.REACT_APP_SERVER_URL
+const server = 'https://fgq.up.railway.app'
 export async function getWeek(w, token) {
     try{
         const res = await fetch(server+'/api/season/week/'+w,
