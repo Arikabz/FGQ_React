@@ -27,6 +27,12 @@ const NavbarSidebar = (props) => {
                     </div>
                     <div className="flex-none hidden lg:block">
                         <ul className="menu menu-horizontal">
+                            <li>
+                                <Link to='/profile'>
+                                    Profile
+                                </Link>
+
+                            </li>
                             <li><Link to='/dashboard' className=''>Dashboard</Link></li>
                             <li><button onClick={()=>logout({ returnTo: window.location.origin})} className=''>Log Out</button></li>
                         </ul>

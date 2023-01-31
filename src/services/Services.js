@@ -1,6 +1,7 @@
+const server = process.env.REACT_APP_SERVER_URL
 export async function getWeek(w, token) {
     try{
-        const res = await fetch('http://localhost:6969/api/season/week/'+w,
+        const res = await fetch(server+'/api/season/week/'+w,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -15,7 +16,7 @@ export async function getWeek(w, token) {
 
 export async function checkUpdate(w, token) {
     try{
-        const res = await fetch('http://localhost:6969/api/season/week/'+w,
+        const res = await fetch(server+'/api/season/week/'+w,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -30,7 +31,7 @@ export async function checkUpdate(w, token) {
 
 export async function editExtraPoints(userID, points, reason, token) {
     try{
-        const res = await fetch(`http://localhost:6969/user/editExtraPoints`,
+        const res = await fetch(`${server}/user/editExtraPoints`,
             {
                 headers: {
                     'Content-Type': 'Application/json',
@@ -52,7 +53,7 @@ export async function editExtraPoints(userID, points, reason, token) {
 
 export async function getLeagueUsers(leagueID, token) {
     try{
-        const res = await fetch(`http://localhost:6969/user/getLeagueUsers`,
+        const res = await fetch(`${server}/user/getLeagueUsers`,
             {
                 headers: {
                     'Content-Type': 'Application/json',
@@ -72,7 +73,7 @@ export async function getLeagueUsers(leagueID, token) {
 
 export async function updatePoints(leagueID, token) {
     try{
-        const res = await fetch(`http://localhost:6969/league/updatePoints`,
+        const res = await fetch(`${server}/league/updatePoints`,
             {
                 headers: {
                     'Content-Type': 'Application/json',
@@ -91,7 +92,7 @@ export async function updatePoints(leagueID, token) {
 }
 export async function getUserInfo(email, token) {
     try{
-        const res = await fetch(`http://localhost:6969/user/getUserInfo`,
+        const res = await fetch(`${server}/user/getUserInfo`,
             {
                 headers: {
                     'Content-Type': 'Application/json',
@@ -111,7 +112,7 @@ export async function getUserInfo(email, token) {
 
 export async function uploadSinglePrediction(userID, leagueID, week, gameNum, awayGuess, homeGuess, token){
     try {
-        const res = await fetch(`http://localhost:6969/predictions/uploadSinglePrediction`,
+        const res = await fetch(`${server}/predictions/uploadSinglePrediction`,
             {
                 headers: {
                     'Content-Type': 'Application/Json',
@@ -136,7 +137,7 @@ export async function uploadSinglePrediction(userID, leagueID, week, gameNum, aw
 
 export async function makePredictionTemplate(userID, leagueID, week, token){
     try {
-        const res = await fetch(`http://localhost:6969/predictions/makePredictionTemplate`,
+        const res = await fetch(`${server}/predictions/makePredictionTemplate`,
             {
                 headers: {
                     'Content-Type': 'Application/Json',
@@ -158,7 +159,7 @@ export async function makePredictionTemplate(userID, leagueID, week, token){
 
 export async function createLeague(email, token){
     try {
-        const res = await fetch(`http://localhost:6969/league/createLeague`,
+        const res = await fetch(`${server}/league/createLeague`,
             {
                 headers: {
                     'Content-Type': 'Application/Json',
@@ -178,7 +179,7 @@ export async function createLeague(email, token){
 
 export async function registerUserInLeague(email, leagueID, token) {
     try{
-        const res = await fetch(`http://localhost:6969/user/registerUserInLeague`,
+        const res = await fetch(`${server}/user/registerUserInLeague`,
             {
                 headers: {
                     'Content-Type': 'Application/Json',
@@ -199,7 +200,7 @@ export async function registerUserInLeague(email, leagueID, token) {
 
 export async function updateSeason(token) {
     try{
-        const res = await fetch('http://localhost:6969/api/season',
+        const res = await fetch(server+'/api/season',
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -213,7 +214,7 @@ export async function updateSeason(token) {
 }
 export async function getCurrentWeek(token) {
     try{
-        const res = await fetch('http://localhost:6969/api/currentWeek',
+        const res = await fetch(server+'/api/currentWeek',
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -228,7 +229,7 @@ export async function getCurrentWeek(token) {
 
 export async function checkUserAndRegister (email, userName, token) {
     try{
-        const res = await fetch(`http://localhost:6969/user/checkAndRegister`,
+        const res = await fetch(`${server}/user/checkAndRegister`,
             {
                 headers: {
                     'Content-Type': 'Application/Json',
@@ -249,7 +250,7 @@ export async function checkUserAndRegister (email, userName, token) {
 
 export async function getLeagueData (leagueID, token) {
     try{
-        const res = await fetch(`http://localhost:6969/user/getLeagueData`,
+        const res = await fetch(`${server}/user/getLeagueData`,
             {
                 headers: {
                     'Content-Type': 'Application/Json',
