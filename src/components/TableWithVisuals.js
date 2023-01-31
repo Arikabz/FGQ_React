@@ -185,7 +185,6 @@ const Entry = (props) => {
             }
             </td>
             <th>
-                <button className="btn btn-ghost btn-xs">details</button>
             </th>
         </tr>
     )
@@ -336,7 +335,7 @@ const TableWithVisuals = (props ) => {
                                 ) 
                             })}
                         </tbody>
-                        <tfoot>
+                        <tfoot className='mt-auto'>
                             <tr>
                                 <th></th>
                                 <th>Away</th>

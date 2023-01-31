@@ -29,12 +29,12 @@ const NavbarSidebar = (props) => {
                         <ul className="menu menu-horizontal">
                             <li>
                                 <Link to='/profile'>
-                                    Profile
+                                    Perfil
                                 </Link>
 
                             </li>
                             <li><Link to='/dashboard' className=''>Dashboard</Link></li>
-                            <li><button onClick={()=>logout({ returnTo: window.location.origin})} className=''>Log Out</button></li>
+                            <li><button onClick={()=>logout({ returnTo: window.location.origin})} className=''>Cerrar Sesion</button></li>
                         </ul>
                     </div>
                 </div>
@@ -46,7 +46,7 @@ const NavbarSidebar = (props) => {
                 <ul className="menu p-4 overflow-y-auto w-80 bg-base-100">
                     <li><Link to='/dashboard' className=''>Dashboard</Link></li>
                     <li><Link to='/profile' className=''>Perfil</Link></li>
-                    <li><button onClick={()=>logout({ returnTo: window.location.origin})} className=''>Log Out</button></li>
+                    <li><button onClick={()=>logout({ returnTo: window.location.origin})} className=''>Cerrar Sesion</button></li>
                 </ul>
             </div>
         </div>
