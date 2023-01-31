@@ -9,6 +9,7 @@ const Entry = (props) => {
     const getTime = () => props.getTime()
     let homeScore, awayScore;
     const [prediction, setPrediction] = useState('');
+    const [md, setMd] = useState(window.matchMedia("(min-width: 768px)").matches);
     const [week, setWeek] = useState('');
     const [inputAway, setInputAway] = useState('');
     const [inputHome, setInputHome] = useState('');
@@ -21,6 +22,23 @@ const Entry = (props) => {
     const [showInput, setShowInput] = useState(props.showInput);
     const [individualToggle, setIndividualToggle] = useState(false);
     const happened = props.game.result || false;
+        const getInitials = (team) => {
+            if(team.includes(' ')){
+                let splitSpaces = team.split(' ').map(x=> {
+                    if(!x.includes('.')){
+                        return x.charAt()
+                    }else {return x}
+                }).join('')
+                if(splitSpaces.includes('.')){
+                    return splitSpaces.split('').filter(x=> x!=='.').join('')
+                } else{
+                    return splitSpaces
+                }
+
+            } else{
+                return team.toUpperCase().slice(0,3)
+            }
+        }
     if(props.game.result){
         let scores = props.game.result.split(' ')
 
@@ -100,24 +118,25 @@ const Entry = (props) => {
         setAwayPrediction(props.prediction.awayPrediction)
         setPrediction(props.prediction)
         setWeek(props.week)
+
     },[individualToggle, props.showInput, props.prediction, props.week])
 
     return  (
-        <tr>
+        <tr className='space-x-3 '>
             <th>
                 <label className=''>
-                    <input type="checkbox" className="checkbox" onClick={showGuessInput} />
+                    <input type="checkbox" className="checkbox h-4 w-4 md:h-6 md:w-6" onClick={showGuessInput} />
                 </label>
             </th>
             <td>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2 md:space-x-3">
                     <div className="avatar">
-                        <div className="mask mask-squircle w-12 h-12">
+                        <div className="mask mask-squircle w-6 h-6 md:w-12 md:h-12">
                             <img src={props.game.AwayLogo} alt="Avatar Tailwind CSS Component" />
                         </div>
                     </div>
                     <div>
-                        <div className="font-bold">{props.game.Away.replace(/[\s\n\d]/g,'').split(/(?=[A-Z])/).join(' ')}</div>
+                        <div className="font-bold text-xs md:text-base">{props.game.Away.replace(/[\s\n\d]/g,'').split(/(?=[A-Z])/).join(' ') }</div>
                         { awayPrediction &&
                             <div className="text-accent">{awayPrediction}</div>
                     }
@@ -131,8 +150,8 @@ const Entry = (props) => {
             </td>
             {!happened &&
                 <td>
-                    <div className="font-bold">{props.game.Time}</div>
-                    <div className="text-sm opacity-50">{props.game.TV.length>4 ? 'CBS' : props.game.TV}</div>
+                    <div className="font-bold text-xs md:text-base">{props.game.Time}</div>
+                    <div className=" text-xs md:text-sm opacity-50">{props.game.TV.length>4 ? 'CBS' : props.game.TV}</div>
                     {showInput && !happened && !awayPrediction &&
                         <div>
                             <button onClick={submitPrediction} className="btn btn-primary">Submit</button>
@@ -157,14 +176,14 @@ const Entry = (props) => {
                 </td>
         }
             <td>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-1 md:space-x-3">
                     <div className="avatar">
-                        <div className="mask mask-squircle w-12 h-12">
+                        <div className="mask mask-squircle w-6 h-6 md:w-12 md:h-12">
                             <img src={props.game.HomeLogo} alt="Avatar Tailwind CSS Component" />
                         </div>
                     </div>
                     <div>
-                        <div className="font-bold">{props.game.Home.replace(/[\s\n\d]/g,'').split(/(?=[A-Z])/).join(' ')}</div>
+                        <div className="font-bold text-xs md:text-base">{props.game.Home.replace(/[\s\n\d]/g,'').split(/(?=[A-Z])/).join(' ') }</div>
                         { homePrediction &&
                             <div className=" text-accent ">{homePrediction}</div>
                     }
@@ -177,15 +196,17 @@ const Entry = (props) => {
             }
             </td>
             <td>
-                {!happened && 
-                    <div>{getStadium()}</div>
+                {!happened && md &&
+                    <div className='text-xs md:text-base'>{getStadium()}</div>
             }
-                {happened && 
+                {happened && md &&
                     <a className='btn btn-ghost btn-xs' href={props.game.gameInfo} target='_blank' rel='noreferrer'>Game Info</a>
             }
             </td>
+                {md &&
             <th>
             </th>
+        }
         </tr>
     )
 }
@@ -194,6 +215,7 @@ const TableWithVisuals = (props ) => {
     const token = props.token;
     const userID = props.userID;
     const leagueID = props.leagueID;
+    const [md, setMd] = useState(window.matchMedia("(min-width: 768px)").matches);
     const [showInput, setShowInput] = useState(false);
     const [timeLeft, setTimeLeft] = useState(true);
     const [stuff, setStuff] = useState({lmao:'yes'});
@@ -293,7 +315,7 @@ const TableWithVisuals = (props ) => {
     }
     if(predictionTemplate&&predictionTemplate.predictions){
         return (
-            <div className="overflow-x-auto w-full">
+            <div className="overflow-x-auto w-full ">
                 {thursday!==''  && timeLeft && 
                     <div className='flex-row'>
                         <div className='grid grid-flox-col text-center flex-col justify-center'>
@@ -310,22 +332,29 @@ const TableWithVisuals = (props ) => {
                         </div>
                     </div>
             }
+                {!md &&
+                                    <Select addClass={' select-secondary my-3'} thisWeek={currentWeek.result[0]} onChange={changeWeek} num={18<Number(currentWeek.result[0].split(' ')[1]) ? Number(currentWeek.result[0].split(' ')[1]) : 18}/>
+            }
                 {stuff.result &&
-                    <table className="table min-w-full">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" className="checkbox" onClick={toggleAllInputs} />
+                    <table className="table table-compact w-full">
+                        <thead className='w-full'>
+                            <tr className=''>
+                                <th className=''>
+                                    <label className=''>
+                                        <input type="checkbox" className="checkbox w-4 h-4 md:w-6 md:h-6" onClick={toggleAllInputs} />
                                     </label>
                                 </th>
-                                <th>Away</th>
+                                <th className=''>Away</th>
                                 <th></th>
                                 <th>Home</th>
-                                <th>More</th>
+                                {md &&
+                                <th className=''>More</th>
+                            }
+                                {md &&
                                 <th>
                                     <Select thisWeek={currentWeek.result[0]} onChange={changeWeek} num={18<Number(currentWeek.result[0].split(' ')[1]) ? Number(currentWeek.result[0].split(' ')[1]) : 18}/>
                                 </th>
+                            }
                             </tr>
                         </thead>
                         <tbody>
@@ -335,14 +364,19 @@ const TableWithVisuals = (props ) => {
                                 ) 
                             })}
                         </tbody>
-                        <tfoot className='mt-auto'>
-                            <tr>
-                                <th></th>
-                                <th>Away</th>
+                        <tfoot className=''>
+                            <tr className=''>
+                                <th className=''></th>
+                                <th className=''>Away</th>
                                 <th></th>
                                 <th>Home</th>
-                                <th>More</th>
+                                {md&&
+                                <th className=''>More</th>
+                            }
+                                {md &&
+
                                 <th></th>
+                            }
                             </tr>
                         </tfoot>
 

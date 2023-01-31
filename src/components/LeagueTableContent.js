@@ -27,7 +27,7 @@ const Row = (props) => {
     }
 
     return (
-        <tr key={props.index}>
+        <tr className='flex-row space-x-0' key={props.index}>
             <th>{props.index}</th>
             <td>{props.name}</td>
             <td>{points}
@@ -63,13 +63,13 @@ const LeagueTableContent = (props) => {
         return (
             <div className=''>
                 <div className="min-h-full overflow-x-auto">
-                    <table className="table w-full">
+                    <table className="table table-compact w-full">
                         <thead>
-                            <tr>
-                                <th>Lugar</th>
-                                <th>Nombre</th>
-                                <th>Puntos</th>
-                                {admin && <th>Extra</th>}
+                            <tr className=''>
+                                <th className='text-xs md:text-base'>Lugar</th>
+                                <th className='text-xs md:text-base'>Nombre</th>
+                                <th className='text-xs md:text-base'>Puntos</th>
+                                {admin && <th className='text-xs md:text-base'>Extra</th>}
                             </tr>
                         </thead>
                         <tbody>
