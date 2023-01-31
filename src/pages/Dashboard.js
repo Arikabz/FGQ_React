@@ -32,6 +32,7 @@ const Dashboard = () => {
     useEffect(()=>{
         getToken().then(t=>{
         setToken(t)
+            console.log(name)
         checkUserAndRegister(email, name, t).then(res=>{
                 if(res.firstTime===false){
                     getUserInfo(email, t).then(userInfo =>{

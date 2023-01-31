@@ -30,9 +30,11 @@ const LeagueContent = (props) => {
                                 const newUser = x.leagueMembers.find(x=>x._id===res.userData._id)
                                 setPoints(newUser.points)
                             })
-                        }
-                    }
+                        }                     }
                     )
+                } else{
+                    setPoints(0)
+                    setLeagueUsers([])
                 }
             })
         }
